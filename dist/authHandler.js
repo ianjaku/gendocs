@@ -38,64 +38,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var axios_1 = __importDefault(require("axios"));
-function createUser(email, password) {
+var cli_1 = __importDefault(require("./cli"));
+function requireAuth() {
     return __awaiter(this, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/users", {
-                        user: { email: email, password: password }
-                    })];
+        var _a, email, password;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, cli_1.default.promptCredentials()];
                 case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
+                    _a = _b.sent(), email = _a.email, password = _a.password;
+                    return [2 /*return*/];
             }
         });
     });
-}
-function createDocument(name, email, password) {
-    return __awaiter(this, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/docs", {
-                        doc: {
-                            name: name
-                        },
-                        credentials: {
-                            email: email, password: password
-                        }
-                    })];
-                case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
-            }
-        });
-    });
-}
-function listDocuments(email, password) {
-    return __awaiter(this, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/docs/list", {
-                        credentials: {
-                            email: email, password: password
-                        }
-                    })];
-                case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
-            }
-        });
-    });
-}
-function baseUrl() {
-    return "http://localhost:4000/api";
 }
 exports.default = {
-    createUser: createUser,
-    createDocument: createDocument,
-    listDocuments: listDocuments
+    requireAuth: requireAuth
 };

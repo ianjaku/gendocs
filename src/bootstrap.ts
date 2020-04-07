@@ -16,6 +16,8 @@ export default {
   - gendocs help
   - gendocs register
   - gendocs document:create
+  
+  - gendocs document:list
   - gendocs init [token]
   - gendocs publish
 */

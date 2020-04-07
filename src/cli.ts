@@ -28,6 +28,18 @@ function promptCredentials(): Promise<{email: string, password: string}> {
     ])
 }
 
+function promptCreateDocument(): Promise<{name: string}> {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Document name: "
+      }
+    ])
+}
+
 export default {
-  promptCredentials
+  promptCredentials,
+  promptCreateDocument
 }

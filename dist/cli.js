@@ -31,6 +31,17 @@ function promptCredentials() {
         }
     ]);
 }
+function promptCreateDocument() {
+    return inquirer_1.default
+        .prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "Document name: "
+        }
+    ]);
+}
 exports.default = {
-    promptCredentials: promptCredentials
+    promptCredentials: promptCredentials,
+    promptCreateDocument: promptCreateDocument
 };

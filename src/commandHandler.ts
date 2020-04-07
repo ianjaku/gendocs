@@ -20,17 +20,43 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
       await repotisory.createUser(email, password)
       logger.info("Registration was succesful!")
     } catch (e) {
-      if (e.response != null && e.response.data != null && e.response.data.errors != null) {
-        const errors = e.response.data.errors
-        for (const key in errors) {
-          for (const message of errors[key]) {
-            logger.error(`${key} ${message}`)
-          }
-        }
-      } else {
-        logger.error(e.message)
+      handleRepositoryError(e)
+    }
+  },
+  "document:create": async (args: string[]) => {
+    const {email, password} = await cli.promptCredentials()
+    const {name} = await cli.promptCreateDocument()
+    try {
+      const response = await repotisory.createDocument(name, email, password)
+      logger.info(`Document created successfully! Your token: ${response.doc.token}`)
+    } catch (e) {
+      handleRepositoryError(e)
+    }
+  },
+  "document:list": async (args: string[]) => {
+    const {email, password} = await cli.promptCredentials()
+    try {
+      const response = await repotisory.listDocuments(email, password)
+      logger.info("[Your documents]")
+      response.docs.forEach((doc: any) => {
+        logger.info(`- ${doc.name} : ${doc.token}`)
+      });
+    } catch (e) {
+      handleRepositoryError(e)
+    }
+  }
+}
+
+function handleRepositoryError(e: any) {
+  if (e.response != null && e.response.data != null && e.response.data.errors != null) {
+    const errors = e.response.data.errors
+    for (const key in errors) {
+      for (const message of errors[key]) {
+        logger.error(`${key} ${message}`)
       }
     }
+  } else {
+    logger.error(e.message)
   }
 }
 
