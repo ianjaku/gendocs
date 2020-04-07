@@ -28,6 +28,11 @@ async function listDocuments(email: string, password: string) {
   return response.data
 }
 
+async function singleDocument(token: string) {
+  const response = await axios.get(baseUrl() + "/v1/docs/" + token)
+  return response.data
+}
+
 function baseUrl() {
   return "http://localhost:4000/api"
 }
@@ -35,5 +40,6 @@ function baseUrl() {
 export default {
   createUser,
   createDocument,
-  listDocuments
+  listDocuments,
+  singleDocument
 }

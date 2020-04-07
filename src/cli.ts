@@ -39,7 +39,31 @@ function promptCreateDocument(): Promise<{name: string}> {
     ])
 }
 
+function promptToken(): Promise<{token: string}> {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "token",
+        message: "Token: "
+      }
+    ])
+}
+
+function promptConfirm(message: string): Promise<{result: boolean}> {
+  return inquirer
+    .prompt([
+      {
+        type: "confirm",
+        name: "result",
+        message
+      }
+    ])
+}
+
 export default {
   promptCredentials,
-  promptCreateDocument
+  promptCreateDocument,
+  promptToken,
+  promptConfirm
 }

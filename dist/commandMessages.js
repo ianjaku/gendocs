@@ -8,10 +8,13 @@ var _messages = {
         return "\n      Registers a new user, prompts for the required data.\n    ";
     },
     "document:create": function () {
-        return "\n      Create a new document, prompt for the required data\n    ";
+        return "\n      Create a new document, prompts for the required data\n    ";
     },
     "document:list": function () {
-        return "\n      Lists all documents for the current user, prompt for the required data\n    ";
+        return "\n      Lists all documents for the current user, prompts for the required data\n    ";
+    },
+    init: function () {
+        return "\n      Creates the gendocs.json file, prompts forn the required data\n    ";
     }
 };
 exports.default = _messages;

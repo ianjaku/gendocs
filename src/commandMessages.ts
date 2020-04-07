@@ -15,12 +15,17 @@ const _messages: {[command: string]: () => string} = {
   },
   "document:create"() {
     return `
-      Create a new document, prompt for the required data
+      Create a new document, prompts for the required data
     `
   },
   "document:list"() {
     return `
-      Lists all documents for the current user, prompt for the required data
+      Lists all documents for the current user, prompts for the required data
+    `
+  },
+  init() {
+    return `
+      Creates the gendocs.json file, prompts forn the required data
     `
   }
 }

@@ -2,6 +2,7 @@ import commandMessages from "./commandMessages"
 import logger from "./logger"
 import cli from "./cli"
 import repotisory from "./repository"
+import configHandler from "./configHandler"
 
 const _handlers: {[command: string]: (args: string[]) => void} = {
   help: (args: string[]) => {
@@ -44,10 +45,25 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     } catch (e) {
       handleRepositoryError(e)
     }
+  },
+  init: async (args: string[]) => {
+    const {token} = await cli.promptToken()
+    try {
+      const response = await repotisory.singleDocument(token)
+      await configHandler.createConfigFile(token, response.doc.name)
+    } catch (e) {
+      handleRepositoryError(e)
+    }
   }
 }
 
 function handleRepositoryError(e: any) {
+  if (e.response.status != null) {
+    if (e.response.status === 401) {
+      logger.error("Unauthorized")
+      return
+    }
+  }
   if (e.response != null && e.response.data != null && e.response.data.errors != null) {
     const errors = e.response.data.errors
     for (const key in errors) {

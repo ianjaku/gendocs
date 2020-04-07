@@ -18,8 +18,8 @@ exports.default = {
   - gendocs help
   - gendocs register
   - gendocs document:create
-  
   - gendocs document:list
-  - gendocs init [token]
+
+  - gendocs init
   - gendocs publish
 */

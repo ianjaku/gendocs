@@ -43,6 +43,7 @@ var commandMessages_1 = __importDefault(require("./commandMessages"));
 var logger_1 = __importDefault(require("./logger"));
 var cli_1 = __importDefault(require("./cli"));
 var repository_1 = __importDefault(require("./repository"));
+var configHandler_1 = __importDefault(require("./configHandler"));
 var _handlers = {
     help: function (args) {
         if (args.length > 0) {
@@ -128,9 +129,40 @@ var _handlers = {
                 case 5: return [2 /*return*/];
             }
         });
+    }); },
+    init: function (args) { return __awaiter(_this, void 0, void 0, function () {
+        var token, response, e_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, cli_1.default.promptToken()];
+                case 1:
+                    token = (_a.sent()).token;
+                    _a.label = 2;
+                case 2:
+                    _a.trys.push([2, 5, , 6]);
+                    return [4 /*yield*/, repository_1.default.singleDocument(token)];
+                case 3:
+                    response = _a.sent();
+                    return [4 /*yield*/, configHandler_1.default.createConfigFile(token, response.doc.name)];
+                case 4:
+                    _a.sent();
+                    return [3 /*break*/, 6];
+                case 5:
+                    e_4 = _a.sent();
+                    handleRepositoryError(e_4);
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
+            }
+        });
     }); }
 };
 function handleRepositoryError(e) {
+    if (e.response.status != null) {
+        if (e.response.status === 401) {
+            logger_1.default.error("Unauthorized");
+            return;
+        }
+    }
     if (e.response != null && e.response.data != null && e.response.data.errors != null) {
         var errors = e.response.data.errors;
         for (var key in errors) {

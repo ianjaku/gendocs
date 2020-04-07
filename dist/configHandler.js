@@ -38,78 +38,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var axios_1 = __importDefault(require("axios"));
-function createUser(email, password) {
+var fs_1 = __importDefault(require("fs"));
+var path_1 = __importDefault(require("path"));
+var cli_1 = __importDefault(require("./cli"));
+function createConfigFile(token, name) {
     return __awaiter(this, void 0, void 0, function () {
-        var response;
+        var filePath, prompt_1, contents;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/users", {
-                        user: { email: email, password: password }
-                    })];
+                case 0:
+                    filePath = path_1.default.join(process.cwd(), "gendocs.json");
+                    if (!fs_1.default.existsSync(filePath)) return [3 /*break*/, 2];
+                    return [4 /*yield*/, cli_1.default.promptConfirm("The file already exists, overwrite?")];
                 case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
+                    prompt_1 = _a.sent();
+                    if (prompt_1.result === false)
+                        return [2 /*return*/];
+                    _a.label = 2;
+                case 2:
+                    contents = {
+                        name: name,
+                        token: token
+                    };
+                    fs_1.default.writeFileSync(filePath, JSON.stringify(contents, null, "\t"));
+                    return [2 /*return*/];
             }
         });
     });
-}
-function createDocument(name, email, password) {
-    return __awaiter(this, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/docs", {
-                        doc: {
-                            name: name
-                        },
-                        credentials: {
-                            email: email, password: password
-                        }
-                    })];
-                case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
-            }
-        });
-    });
-}
-function listDocuments(email, password) {
-    return __awaiter(this, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/docs/list", {
-                        credentials: {
-                            email: email, password: password
-                        }
-                    })];
-                case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
-            }
-        });
-    });
-}
-function singleDocument(token) {
-    return __awaiter(this, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.get(baseUrl() + "/v1/docs/" + token)];
-                case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
-            }
-        });
-    });
-}
-function baseUrl() {
-    return "http://localhost:4000/api";
 }
 exports.default = {
-    createUser: createUser,
-    createDocument: createDocument,
-    listDocuments: listDocuments,
-    singleDocument: singleDocument
+    createConfigFile: createConfigFile
 };

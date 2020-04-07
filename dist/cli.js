@@ -41,7 +41,29 @@ function promptCreateDocument() {
         }
     ]);
 }
+function promptToken() {
+    return inquirer_1.default
+        .prompt([
+        {
+            type: "input",
+            name: "token",
+            message: "Token: "
+        }
+    ]);
+}
+function promptConfirm(message) {
+    return inquirer_1.default
+        .prompt([
+        {
+            type: "confirm",
+            name: "result",
+            message: message
+        }
+    ]);
+}
 exports.default = {
     promptCredentials: promptCredentials,
-    promptCreateDocument: promptCreateDocument
+    promptCreateDocument: promptCreateDocument,
+    promptToken: promptToken,
+    promptConfirm: promptConfirm
 };
