@@ -198,7 +198,7 @@ var _handlers = {
         });
     }); },
     publish: function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var _a, token, pages, sourcePath, generatedPages, result;
+        var _a, token, pages, sourcePath, generatedPages, result, e_3;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4 /*yield*/, configHandler_1.default.readConfigFile()];
@@ -211,11 +211,22 @@ var _handlers = {
                         pages = pages.map(function (p) { return path_1.default.join(sourcePath, p); });
                     }
                     generatedPages = documentHandler_1.default.loadPages(pages);
-                    return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
+                    _b.label = 2;
                 case 2:
+                    _b.trys.push([2, 4, , 5]);
+                    return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
+                case 3:
                     result = _b.sent();
-                    logger_1.default.info("\n      Succesfully updated your documentation!\n      Your site is available at: " + result.doc.full_subdomain + "\n    ");
-                    return [2 /*return*/];
+                    logger_1.default.info("\n        Succesfully updated your documentation!\n        Your site is available at: " + result.doc.full_subdomain + "\n      ");
+                    return [3 /*break*/, 5];
+                case 4:
+                    e_3 = _b.sent();
+                    if (e_3.response.status === 403) {
+                        logger_1.default.info("\n          You've hit the publishes/minute limit. Please wait a minute before you try again.\n        ");
+                        return [2 /*return*/];
+                    }
+                    throw e_3;
+                case 5: return [2 /*return*/];
             }
         });
     }); },
@@ -250,7 +261,7 @@ var _handlers = {
 };
 function updateSubdomain(token) {
     return __awaiter(this, void 0, void 0, function () {
-        var subdomain, result, e_3;
+        var subdomain, result, e_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, cli_1.default.promptSubdomain()];
@@ -267,8 +278,8 @@ function updateSubdomain(token) {
                     logger_1.default.info("\n      Your site is now available at: " + result.doc.full_subdomain + "\n    ");
                     return [3 /*break*/, 5];
                 case 4:
-                    e_3 = _a.sent();
-                    if (e_3.response.status === 400) {
+                    e_4 = _a.sent();
+                    if (e_4.response.status === 400) {
                         logger_1.default.info("Subdomain \"" + subdomain + "\" has already been taken.");
                         updateSubdomain(token);
                     }
@@ -300,7 +311,7 @@ function handleCommandHandlerError(e) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var command, args, e_4;
+        var command, args, e_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -325,8 +336,8 @@ function run() {
                     _a.sent();
                     return [3 /*break*/, 4];
                 case 3:
-                    e_4 = _a.sent();
-                    handleCommandHandlerError(e_4);
+                    e_5 = _a.sent();
+                    handleCommandHandlerError(e_5);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }

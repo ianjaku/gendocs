@@ -108,11 +108,21 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     }
     const generatedPages = documentHandler.loadPages(pages)
 
-    const result = await repository.publish(token, generatedPages)
-    logger.info(`
-      Succesfully updated your documentation!
-      Your site is available at: ${result.doc.full_subdomain}
-    `)
+    try {
+      const result = await repository.publish(token, generatedPages)
+      logger.info(`
+        Succesfully updated your documentation!
+        Your site is available at: ${result.doc.full_subdomain}
+      `)
+    } catch (e) {
+      if (e.response.status === 403) {
+        logger.info(`
+          You've hit the publishes/minute limit. Please wait a minute before you try again.
+        `)
+        return
+      }
+      throw e
+    }
   },
   "subdomain:set": async (args: string[]) => {
     const token = await authHandler.getToken()

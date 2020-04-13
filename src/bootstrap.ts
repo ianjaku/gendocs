@@ -32,7 +32,5 @@ export default {
 
   TODO: show error when insert fails (when meilisearch is down for example)
 
-  TODO: update application name in config after rename
-
   TODO: limit docs that a user can create (add to invitation) and/or amount of pages in total?
 */
