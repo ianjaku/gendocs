@@ -6,8 +6,7 @@ async function getToken() {
   const token = await attemptGetTokenFromConfig()
   if (token != null) return token
 
-  const cliResult = await cli.promptToken()
-  return cliResult.token
+  return await cli.promptToken()
 }
 
 async function attemptGetTokenFromConfig() {

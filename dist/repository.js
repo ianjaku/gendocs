@@ -49,6 +49,13 @@ function createUser(invitation, email, password) {
         });
     });
 }
+function doesEmailExist(email) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, get("/v1/users/email_exists/" + email)];
+        });
+    });
+}
 function createDocument(name, email, password) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -167,5 +174,6 @@ exports.default = {
     addDomain: addDomain,
     tryAddingSubdomain: tryAddingSubdomain,
     validateInvitation: validateInvitation,
-    updateDocument: updateDocument
+    updateDocument: updateDocument,
+    doesEmailExist: doesEmailExist
 };

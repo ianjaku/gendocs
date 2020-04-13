@@ -8,6 +8,10 @@ async function createUser(invitation: string, email: string, password: string) {
   })
 }
 
+async function doesEmailExist(email: string) {
+  return get("/v1/users/email_exists/" + email)
+}
+
 async function createDocument(name: string, email: string, password: string) {
   return post("/v1/docs", {
     doc: { name },
@@ -79,5 +83,6 @@ export default {
   addDomain,
   tryAddingSubdomain,
   validateInvitation,
-  updateDocument
+  updateDocument,
+  doesEmailExist
 }

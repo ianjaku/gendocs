@@ -34,9 +34,9 @@ exports.default = {
 
   TODO: show error when insert fails (when meilisearch is down for example)
 
-  TODO: docs:rename
-
-  TODO: docs:delete
-
   TODO: test if email exists before entering password
+
+  TODO: update application name in config after rename
+
+  TODO: limit docs that a user can create (add to invitation) and/or amount of pages in total?
 */

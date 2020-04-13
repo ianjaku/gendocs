@@ -59,107 +59,106 @@ var _handlers = {
         logger_1.default.info(commandMessages_1.default.help());
     },
     "register": function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var invitation, e_1, _a, email, password, e_2;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var invitation, e_1, email, validationResult, password, e_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
                     logger_1.default.info("\n      Registration is currently only possible after an invitation.\n      If you would to use Gendocs please send an email to ian@invacto.com\n    ");
                     return [4 /*yield*/, cli_1.default.promptInvitation()];
                 case 1:
-                    invitation = (_b.sent()).invitation;
-                    _b.label = 2;
+                    invitation = _a.sent();
+                    _a.label = 2;
                 case 2:
-                    _b.trys.push([2, 4, , 5]);
+                    _a.trys.push([2, 4, , 5]);
                     return [4 /*yield*/, repository_1.default.validateInvitation(invitation)];
                 case 3:
-                    _b.sent();
+                    _a.sent();
                     return [3 /*break*/, 5];
                 case 4:
-                    e_1 = _b.sent();
+                    e_1 = _a.sent();
                     if (e_1.response.status === 401) {
                         logger_1.default.info("\n          The given invitation is invalid or has already been used.\n        ");
                     }
                     else {
-                        handleRepositoryError(e_1);
+                        throw e_1;
                     }
                     return [2 /*return*/];
-                case 5: return [4 /*yield*/, cli_1.default.promptCredentials()];
+                case 5: return [4 /*yield*/, cli_1.default.promptEmail()];
                 case 6:
-                    _a = _b.sent(), email = _a.email, password = _a.password;
-                    _b.label = 7;
+                    email = _a.sent();
+                    return [4 /*yield*/, repository_1.default.doesEmailExist(email)];
                 case 7:
-                    _b.trys.push([7, 9, , 10]);
-                    return [4 /*yield*/, repository_1.default.createUser(invitation, email, password)];
+                    validationResult = _a.sent();
+                    if (validationResult.exists) {
+                        logger_1.default.info("\n        That email address has already been used.\n      ");
+                        return [2 /*return*/];
+                    }
+                    return [4 /*yield*/, cli_1.default.promptPassword()];
                 case 8:
-                    _b.sent();
-                    logger_1.default.info("Registration was succesful!");
-                    return [3 /*break*/, 10];
+                    password = _a.sent();
+                    _a.label = 9;
                 case 9:
-                    e_2 = _b.sent();
+                    _a.trys.push([9, 11, , 12]);
+                    return [4 /*yield*/, repository_1.default.createUser(invitation, email, password)];
+                case 10:
+                    _a.sent();
+                    logger_1.default.info("Registration was succesful!");
+                    return [3 /*break*/, 12];
+                case 11:
+                    e_2 = _a.sent();
                     if (e_2.response.status === 401) {
                         logger_1.default.info("\n          The given invitation is invalid or has already been used.\n        ");
                         return [2 /*return*/];
                     }
-                    handleRepositoryError(e_2);
-                    return [3 /*break*/, 10];
-                case 10: return [2 /*return*/];
+                    throw e_2;
+                case 12: return [2 /*return*/];
             }
         });
     }); },
     "docs:create": function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var _a, email, password, name, response, e_3;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, cli_1.default.promptCredentials()];
+        var email, password, name, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, cli_1.default.promptEmail()];
                 case 1:
-                    _a = _b.sent(), email = _a.email, password = _a.password;
-                    return [4 /*yield*/, cli_1.default.promptDocName()];
+                    email = _a.sent();
+                    return [4 /*yield*/, cli_1.default.promptPassword()];
                 case 2:
-                    name = (_b.sent()).name;
-                    _b.label = 3;
+                    password = _a.sent();
+                    return [4 /*yield*/, cli_1.default.promptDocName()];
                 case 3:
-                    _b.trys.push([3, 5, , 6]);
+                    name = _a.sent();
                     return [4 /*yield*/, repository_1.default.createDocument(name, email, password)];
                 case 4:
-                    response = _b.sent();
+                    response = _a.sent();
                     logger_1.default.info("Document created successfully! Your token: " + response.doc.token);
-                    return [3 /*break*/, 6];
-                case 5:
-                    e_3 = _b.sent();
-                    handleRepositoryError(e_3);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [2 /*return*/];
             }
         });
     }); },
     "docs:list": function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var _a, email, password, response, e_4;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, cli_1.default.promptCredentials()];
+        var email, password, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, cli_1.default.promptEmail()];
                 case 1:
-                    _a = _b.sent(), email = _a.email, password = _a.password;
-                    _b.label = 2;
+                    email = _a.sent();
+                    return [4 /*yield*/, cli_1.default.promptPassword()];
                 case 2:
-                    _b.trys.push([2, 4, , 5]);
+                    password = _a.sent();
                     return [4 /*yield*/, repository_1.default.listDocuments(email, password)];
                 case 3:
-                    response = _b.sent();
-                    logger_1.default.info("\n        [Your documents]\n      ");
+                    response = _a.sent();
+                    logger_1.default.info("\n      [Your documents]\n    ");
                     response.docs.forEach(function (doc) {
                         logger_1.default.info("- " + doc.name + " : " + doc.token + " @ " + doc.full_subdomain);
                     });
-                    return [3 /*break*/, 5];
-                case 4:
-                    e_4 = _b.sent();
-                    handleRepositoryError(e_4);
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+                    return [2 /*return*/];
             }
         });
     }); },
     "docs:rename": function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var token, name, e_5;
+        var token, name;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, authHandler_1.default.getToken()];
@@ -169,52 +168,36 @@ var _handlers = {
                         return [2 /*return*/];
                     return [4 /*yield*/, cli_1.default.promptDocName()];
                 case 2:
-                    name = (_a.sent()).name;
+                    name = _a.sent();
                     if (name == null)
                         return [2 /*return*/];
-                    _a.label = 3;
-                case 3:
-                    _a.trys.push([3, 5, , 6]);
                     return [4 /*yield*/, repository_1.default.updateDocument(token, { name: name })];
-                case 4:
+                case 3:
                     _a.sent();
                     logger_1.default.info("Doc has been updated.");
-                    return [3 /*break*/, 6];
-                case 5:
-                    e_5 = _a.sent();
-                    handleRepositoryError(e_5);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [2 /*return*/];
             }
         });
     }); },
     init: function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var token, response, e_6;
+        var token, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, cli_1.default.promptToken()];
                 case 1:
-                    token = (_a.sent()).token;
-                    _a.label = 2;
-                case 2:
-                    _a.trys.push([2, 5, , 6]);
+                    token = _a.sent();
                     return [4 /*yield*/, repository_1.default.singleDocument(token)];
-                case 3:
+                case 2:
                     response = _a.sent();
                     return [4 /*yield*/, configHandler_1.default.createConfigFile(token, response.doc.name)];
-                case 4:
+                case 3:
                     _a.sent();
-                    return [3 /*break*/, 6];
-                case 5:
-                    e_6 = _a.sent();
-                    handleRepositoryError(e_6);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [2 /*return*/];
             }
         });
     }); },
     publish: function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var _a, token, pages, sourcePath, generatedPages, result, e_7;
+        var _a, token, pages, sourcePath, generatedPages, result;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4 /*yield*/, configHandler_1.default.readConfigFile()];
@@ -227,19 +210,11 @@ var _handlers = {
                         pages = pages.map(function (p) { return path_1.default.join(sourcePath, p); });
                     }
                     generatedPages = documentHandler_1.default.loadPages(pages);
-                    _b.label = 2;
-                case 2:
-                    _b.trys.push([2, 4, , 5]);
                     return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
-                case 3:
+                case 2:
                     result = _b.sent();
-                    logger_1.default.info("\n        Succesfully updated your documentation!\n        Your site is available at: " + result.doc.full_subdomain + "\n      ");
-                    return [3 /*break*/, 5];
-                case 4:
-                    e_7 = _b.sent();
-                    handleRepositoryError(e_7);
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+                    logger_1.default.info("\n      Succesfully updated your documentation!\n      Your site is available at: " + result.doc.full_subdomain + "\n    ");
+                    return [2 /*return*/];
             }
         });
     }); },
@@ -274,7 +249,7 @@ var _handlers = {
 };
 function updateSubdomain(token) {
     return __awaiter(this, void 0, void 0, function () {
-        var subdomain, result, e_8;
+        var subdomain, result, e_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, cli_1.default.promptSubdomain()];
@@ -291,8 +266,8 @@ function updateSubdomain(token) {
                     logger_1.default.info("\n      Your site is now available at: " + result.doc.full_subdomain + "\n    ");
                     return [3 /*break*/, 5];
                 case 4:
-                    e_8 = _a.sent();
-                    if (e_8.response.status === 400) {
+                    e_3 = _a.sent();
+                    if (e_3.response.status === 400) {
                         logger_1.default.info("Subdomain \"" + subdomain + "\" has already been taken.");
                         updateSubdomain(token);
                     }
@@ -302,7 +277,7 @@ function updateSubdomain(token) {
         });
     });
 }
-function handleRepositoryError(e) {
+function handleCommandHandlerError(e) {
     if (e.response.status != null) {
         if (e.response.status === 401) {
             logger_1.default.error("Unauthorized");
@@ -323,20 +298,39 @@ function handleRepositoryError(e) {
     }
 }
 function run() {
-    if (process.argv.length < 3) {
-        logger_1.default.info(commandMessages_1.default.help());
-        return;
-    }
-    var command = process.argv[2];
-    if (!(command in _handlers)) {
-        logger_1.default.info(commandMessages_1.default.help());
-        return;
-    }
-    var args = [];
-    if (process.argv.length > 3) {
-        args = process.argv.slice(3);
-    }
-    _handlers[command](args);
+    return __awaiter(this, void 0, void 0, function () {
+        var command, args, e_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (process.argv.length < 3) {
+                        logger_1.default.info(commandMessages_1.default.help());
+                        return [2 /*return*/];
+                    }
+                    command = process.argv[2];
+                    if (!(command in _handlers)) {
+                        logger_1.default.info(commandMessages_1.default.help());
+                        return [2 /*return*/];
+                    }
+                    args = [];
+                    if (process.argv.length > 3) {
+                        args = process.argv.slice(3);
+                    }
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, Promise.resolve(_handlers[command](args))];
+                case 2:
+                    _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    e_4 = _a.sent();
+                    handleCommandHandlerError(e_4);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
 }
 exports.default = {
     run: run

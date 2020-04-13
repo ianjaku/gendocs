@@ -1,20 +1,9 @@
 import inquirer from "inquirer"
 import logger from "./logger"
 
-function promptCredentials(): Promise<{email: string, password: string}> {
-  return inquirer
+async function promptPassword(): Promise<string> {
+  const result = await inquirer
     .prompt([
-      {
-        type: "input",
-        name: "email",
-        message: "Email:",
-        validate(value: string) {
-          if (value != null && value.match(/@/)) {
-            return true
-          }
-          return "Must be a valid email."
-        }
-      },
       {
         type: "password",
         name: "password",
@@ -27,28 +16,33 @@ function promptCredentials(): Promise<{email: string, password: string}> {
         }
       }
     ])
+  return result.password
 }
 
-function promptDocName(): Promise<{name: string}> {
-  return inquirer
+async function promptEmail(): Promise<string> {
+  const result = await  inquirer
     .prompt([
       {
         type: "input",
-        name: "name",
-        message: "Document name:"
-      }
+        name: "email",
+        message: "Email:",
+        validate(value: string) {
+          if (value != null && value.match(/@/)) {
+            return true
+          }
+          return "Must be a valid email."
+        }
+      },
     ])
+  return result.email
 }
 
-function promptToken(): Promise<{token: string}> {
-  return inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "token",
-        message: "Token:"
-      }
-    ])
+function promptDocName(): Promise<string> {
+  return promptSingle("Document name:")
+}
+
+function promptToken(): Promise<string> {
+  return promptSingle("Token:")
 }
 
 function promptConfirm(message: string): Promise<{result: boolean}> {
@@ -92,19 +86,26 @@ function promptSubdomain(): Promise<{subdomain: string}> {
     ])
 }
 
-function promptInvitation(): Promise<{invitation: string}> {
-  return inquirer
+function promptInvitation(): Promise<string> {
+  return promptSingle("Your invitation:")
+}
+
+async function promptSingle(message: string): Promise<string> {
+  const result = await inquirer
     .prompt([
       {
         type: "input",
-        name: "invitation",
-        message: "Your invitation:"
+        name: "value",
+        message
       }
     ])
+
+  return result.value
 }
 
 export default {
-  promptCredentials,
+  promptEmail,
+  promptPassword,
   promptDocName,
   promptToken,
   promptConfirm,

@@ -42,7 +42,7 @@ var configHandler_1 = __importDefault(require("./configHandler"));
 var cli_1 = __importDefault(require("./cli"));
 function getToken() {
     return __awaiter(this, void 0, void 0, function () {
-        var token, cliResult;
+        var token;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, attemptGetTokenFromConfig()];
@@ -51,9 +51,7 @@ function getToken() {
                     if (token != null)
                         return [2 /*return*/, token];
                     return [4 /*yield*/, cli_1.default.promptToken()];
-                case 2:
-                    cliResult = _a.sent();
-                    return [2 /*return*/, cliResult.token];
+                case 2: return [2 /*return*/, _a.sent()];
             }
         });
     });
