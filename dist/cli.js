@@ -4,13 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var inquirer_1 = __importDefault(require("inquirer"));
+var logger_1 = __importDefault(require("./logger"));
 function promptCredentials() {
     return inquirer_1.default
         .prompt([
         {
             type: "input",
             name: "email",
-            message: "Email: ",
+            message: "Email:",
             validate: function (value) {
                 if (value != null && value.match(/@/)) {
                     return true;
@@ -21,7 +22,7 @@ function promptCredentials() {
         {
             type: "password",
             name: "password",
-            message: "Password: ",
+            message: "Password:",
             validate: function (value) {
                 if (value != null && value.length > 7) {
                     return true;
@@ -37,7 +38,7 @@ function promptCreateDocument() {
         {
             type: "input",
             name: "name",
-            message: "Document name: "
+            message: "Document name:"
         }
     ]);
 }
@@ -47,7 +48,7 @@ function promptToken() {
         {
             type: "input",
             name: "token",
-            message: "Token: "
+            message: "Token:"
         }
     ]);
 }
@@ -61,9 +62,35 @@ function promptConfirm(message) {
         }
     ]);
 }
+function promptDomain() {
+    logger_1.default.info("\n    Which domain would you like to add?\n\n    Format: example.com\n  ");
+    return inquirer_1.default
+        .prompt([
+        {
+            type: "input",
+            name: "result",
+            message: "domain"
+        }
+    ]);
+}
+function promptSubdomain() {
+    return inquirer_1.default
+        .prompt([
+        {
+            type: "input",
+            name: "subdomain",
+            message: "New subdomain:",
+            transformer: function (input, meta) {
+                return input + ".gendocs.io";
+            }
+        }
+    ]);
+}
 exports.default = {
     promptCredentials: promptCredentials,
     promptCreateDocument: promptCreateDocument,
     promptToken: promptToken,
-    promptConfirm: promptConfirm
+    promptConfirm: promptConfirm,
+    promptDomain: promptDomain,
+    promptSubdomain: promptSubdomain
 };

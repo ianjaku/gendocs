@@ -5,7 +5,11 @@ const _messages: {[command: string]: () => string} = {
       Available commands:
         - help 
         - register
-        - document:create
+        - docs:create
+        - docs:list
+        - init
+        - publish
+        - subdomain:set
     `
   },
   register() {
@@ -13,19 +17,29 @@ const _messages: {[command: string]: () => string} = {
       Registers a new user, prompts for the required data.
     `
   },
-  "document:create"() {
+  "docs:create"() {
     return `
-      Create a new document, prompts for the required data
+      Create a new project, prompts for the required data
     `
   },
-  "document:list"() {
+  "docs:list"() {
     return `
-      Lists all documents for the current user, prompts for the required data
+      Lists all projects for the current user, prompts for the required data
     `
   },
   init() {
     return `
-      Creates the gendocs.json file, prompts forn the required data
+      Creates the gendocs.json file, prompts for the required data
+    `
+  },
+  publish() {
+    return `
+      Commits your files to the website.
+    `
+  },
+  "subdomain:set"() {
+    return `
+      Change the subdomain for a project, promts for the required data.
     `
   }
 }

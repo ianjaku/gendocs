@@ -1,4 +1,5 @@
 import inquirer from "inquirer"
+import logger from "./logger"
 
 function promptCredentials(): Promise<{email: string, password: string}> {
   return inquirer
@@ -6,7 +7,7 @@ function promptCredentials(): Promise<{email: string, password: string}> {
       {
         type: "input",
         name: "email",
-        message: "Email: ",
+        message: "Email:",
         validate(value: string) {
           if (value != null && value.match(/@/)) {
             return true
@@ -17,7 +18,7 @@ function promptCredentials(): Promise<{email: string, password: string}> {
       {
         type: "password",
         name: "password",
-        message: "Password: ",
+        message: "Password:",
         validate(value: string) {
           if (value != null && value.length > 7) {
             return true
@@ -34,7 +35,7 @@ function promptCreateDocument(): Promise<{name: string}> {
       {
         type: "input",
         name: "name",
-        message: "Document name: "
+        message: "Document name:"
       }
     ])
 }
@@ -45,7 +46,7 @@ function promptToken(): Promise<{token: string}> {
       {
         type: "input",
         name: "token",
-        message: "Token: "
+        message: "Token:"
       }
     ])
 }
@@ -61,9 +62,41 @@ function promptConfirm(message: string): Promise<{result: boolean}> {
     ])
 }
 
+function promptDomain(): Promise<{domain: string}> {
+  logger.info(`
+    Which domain would you like to add?
+
+    Format: example.com
+  `)
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "result",
+        message: "domain"
+      }
+    ])
+}
+
+function promptSubdomain(): Promise<{subdomain: string}> {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "subdomain",
+        message: "New subdomain:",
+        transformer(input: string, meta: any) {
+          return input + ".gendocs.io"
+        }
+      }
+    ])
+}
+
 export default {
   promptCredentials,
   promptCreateDocument,
   promptToken,
-  promptConfirm
+  promptConfirm,
+  promptDomain,
+  promptSubdomain
 }

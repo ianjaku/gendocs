@@ -41,49 +41,68 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 function createUser(email, password) {
     return __awaiter(this, void 0, void 0, function () {
-        var response;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/users", {
-                        user: { email: email, password: password }
-                    })];
-                case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
-            }
+            return [2 /*return*/, post("/v1/users", {
+                    user: { email: email, password: password }
+                })];
         });
     });
 }
 function createDocument(name, email, password) {
     return __awaiter(this, void 0, void 0, function () {
-        var response;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/docs", {
-                        doc: {
-                            name: name
-                        },
-                        credentials: {
-                            email: email, password: password
-                        }
-                    })];
-                case 1:
-                    response = _a.sent();
-                    return [2 /*return*/, response.data];
-            }
+            return [2 /*return*/, post("/v1/docs", {
+                    doc: { name: name },
+                    credentials: { email: email, password: password }
+                })];
         });
     });
 }
 function listDocuments(email, password) {
     return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, post("/v1/docs/list", { credentials: { email: email, password: password } })];
+        });
+    });
+}
+function singleDocument(token) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, get("/v1/docs/" + token)];
+        });
+    });
+}
+function publish(token, pages) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, post("/v1/pages", { token: token, pages: pages })];
+        });
+    });
+}
+function addDomain(token, domainName) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, post("/v1/docs/" + token + "/domains", {
+                    domain: domainName
+                })];
+        });
+    });
+}
+function tryAddingSubdomain(token, subdomain) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, post("/v1/docs/" + token + "/subdomain", {
+                    subdomain: subdomain
+                })];
+        });
+    });
+}
+function post(relativeUrl, data) {
+    return __awaiter(this, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/docs/list", {
-                        credentials: {
-                            email: email, password: password
-                        }
-                    })];
+                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + relativeUrl, data)];
                 case 1:
                     response = _a.sent();
                     return [2 /*return*/, response.data];
@@ -91,12 +110,12 @@ function listDocuments(email, password) {
         });
     });
 }
-function singleDocument(token) {
+function get(relativeUrl) {
     return __awaiter(this, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.get(baseUrl() + "/v1/docs/" + token)];
+                case 0: return [4 /*yield*/, axios_1.default.get(baseUrl() + relativeUrl)];
                 case 1:
                     response = _a.sent();
                     return [2 /*return*/, response.data];
@@ -105,11 +124,16 @@ function singleDocument(token) {
     });
 }
 function baseUrl() {
+    // return "https://gendocs.io/api"
     return "http://localhost:4000/api";
+    // return "https://gendocs.gendocs.invacto.com/api"
 }
 exports.default = {
     createUser: createUser,
     createDocument: createDocument,
     listDocuments: listDocuments,
-    singleDocument: singleDocument
+    singleDocument: singleDocument,
+    publish: publish,
+    addDomain: addDomain,
+    tryAddingSubdomain: tryAddingSubdomain
 };

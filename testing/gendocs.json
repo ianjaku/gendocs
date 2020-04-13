@@ -2,6 +2,8 @@
 	"name": "testDoc",
 	"token": "d0f5832e-ffcd-46c1-8027-c28c20a583c2",
 	"pages": [
-		"./test.md"
+		"what_is",
+		"getting_started",
+		"crud.md"
 	]
 }

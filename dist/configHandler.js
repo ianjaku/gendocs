@@ -43,12 +43,11 @@ var path_1 = __importDefault(require("path"));
 var cli_1 = __importDefault(require("./cli"));
 function createConfigFile(token, name) {
     return __awaiter(this, void 0, void 0, function () {
-        var filePath, prompt_1, contents;
+        var prompt_1, contents;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    filePath = path_1.default.join(process.cwd(), "gendocs.json");
-                    if (!fs_1.default.existsSync(filePath)) return [3 /*break*/, 2];
+                    if (!fs_1.default.existsSync(configFilePath())) return [3 /*break*/, 2];
                     return [4 /*yield*/, cli_1.default.promptConfirm("The file already exists, overwrite?")];
                 case 1:
                     prompt_1 = _a.sent();
@@ -58,14 +57,33 @@ function createConfigFile(token, name) {
                 case 2:
                     contents = {
                         name: name,
-                        token: token
+                        token: token,
+                        pages: []
                     };
-                    fs_1.default.writeFileSync(filePath, JSON.stringify(contents, null, "\t"));
+                    fs_1.default.writeFileSync(configFilePath(), JSON.stringify(contents, null, "\t"));
                     return [2 /*return*/];
             }
         });
     });
 }
+function readConfigFile() {
+    return __awaiter(this, void 0, void 0, function () {
+        var buffer, resultJSON, result;
+        return __generator(this, function (_a) {
+            if (!fs_1.default.existsSync(configFilePath())) {
+                throw Error("\n      Config file could not be found.\n      Use \"gendocs init\" to generate the config file.\n    ");
+            }
+            buffer = fs_1.default.readFileSync(configFilePath());
+            resultJSON = buffer.toString('utf-8');
+            result = JSON.parse(resultJSON);
+            return [2 /*return*/, result];
+        });
+    });
+}
+function configFilePath() {
+    return path_1.default.join(process.cwd(), "gendocs.json");
+}
 exports.default = {
-    createConfigFile: createConfigFile
+    createConfigFile: createConfigFile,
+    readConfigFile: readConfigFile
 };

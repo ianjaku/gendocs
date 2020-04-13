@@ -38,20 +38,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var configHandler_1 = __importDefault(require("./configHandler"));
 var cli_1 = __importDefault(require("./cli"));
-function requireAuth() {
+function getToken() {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, email, password;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, cli_1.default.promptCredentials()];
+        var token, cliResult;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, attemptGetTokenFromConfig()];
                 case 1:
-                    _a = _b.sent(), email = _a.email, password = _a.password;
-                    return [2 /*return*/];
+                    token = _a.sent();
+                    if (token != null)
+                        return [2 /*return*/, token];
+                    return [4 /*yield*/, cli_1.default.promptToken()];
+                case 2:
+                    cliResult = _a.sent();
+                    return [2 /*return*/, cliResult.token];
+            }
+        });
+    });
+}
+function attemptGetTokenFromConfig() {
+    return __awaiter(this, void 0, void 0, function () {
+        var token, e_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, configHandler_1.default.readConfigFile()];
+                case 1:
+                    token = (_a.sent()).token;
+                    return [2 /*return*/, token];
+                case 2:
+                    e_1 = _a.sent();
+                    return [2 /*return*/, null];
+                case 3: return [2 /*return*/];
             }
         });
     });
 }
 exports.default = {
-    requireAuth: requireAuth
+    getToken: getToken
 };

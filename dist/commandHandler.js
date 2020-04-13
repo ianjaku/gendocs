@@ -44,6 +44,10 @@ var logger_1 = __importDefault(require("./logger"));
 var cli_1 = __importDefault(require("./cli"));
 var repository_1 = __importDefault(require("./repository"));
 var configHandler_1 = __importDefault(require("./configHandler"));
+var documentHandler_1 = __importDefault(require("./documentHandler"));
+var repository_2 = __importDefault(require("./repository"));
+var path_1 = __importDefault(require("path"));
+var authHandler_1 = __importDefault(require("./authHandler"));
 var _handlers = {
     help: function (args) {
         if (args.length > 0) {
@@ -78,7 +82,7 @@ var _handlers = {
             }
         });
     }); },
-    "document:create": function (args) { return __awaiter(_this, void 0, void 0, function () {
+    "docs:create": function (args) { return __awaiter(_this, void 0, void 0, function () {
         var _a, email, password, name, response, e_2;
         return __generator(this, function (_b) {
             switch (_b.label) {
@@ -104,7 +108,7 @@ var _handlers = {
             }
         });
     }); },
-    "document:list": function (args) { return __awaiter(_this, void 0, void 0, function () {
+    "docs:list": function (args) { return __awaiter(_this, void 0, void 0, function () {
         var _a, email, password, response, e_3;
         return __generator(this, function (_b) {
             switch (_b.label) {
@@ -119,7 +123,7 @@ var _handlers = {
                     response = _b.sent();
                     logger_1.default.info("[Your documents]");
                     response.docs.forEach(function (doc) {
-                        logger_1.default.info("- " + doc.name + " : " + doc.token);
+                        logger_1.default.info("- " + doc.id + " " + doc.name + " : " + doc.token);
                     });
                     return [3 /*break*/, 5];
                 case 4:
@@ -154,8 +158,93 @@ var _handlers = {
                 case 6: return [2 /*return*/];
             }
         });
+    }); },
+    publish: function (args) { return __awaiter(_this, void 0, void 0, function () {
+        var _a, token, pages, sourcePath, generatedPages, result, e_5;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, configHandler_1.default.readConfigFile()];
+                case 1:
+                    _a = _b.sent(), token = _a.token, pages = _a.pages, sourcePath = _a.sourcePath;
+                    if (sourcePath != null) {
+                        pages = pages.map(function (p) { return path_1.default.join(sourcePath, p); });
+                    }
+                    generatedPages = documentHandler_1.default.loadPages(pages);
+                    _b.label = 2;
+                case 2:
+                    _b.trys.push([2, 4, , 5]);
+                    return [4 /*yield*/, repository_2.default.publish(token, generatedPages)];
+                case 3:
+                    result = _b.sent();
+                    logger_1.default.info("\n        Succesfully updated your documentation!\n        Your site is available at: " + result.doc.full_subdomain + "\n      ");
+                    return [3 /*break*/, 5];
+                case 4:
+                    e_5 = _b.sent();
+                    handleRepositoryError(e_5);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    }); },
+    "subdomain:set": function (args) { return __awaiter(_this, void 0, void 0, function () {
+        var token;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, authHandler_1.default.getToken()];
+                case 1:
+                    token = _a.sent();
+                    if (token == null)
+                        return [2 /*return*/];
+                    updateSubdomain(token);
+                    return [2 /*return*/];
+            }
+        });
     }); }
+    // "domains:add": async (args: string[]) => {
+    //   let { token } = await configHandler.readConfigFile()
+    //   if (token == null) {
+    //     token = (await cli.promptToken()).token
+    //   }
+    //   if (token == null) return
+    //   const { domain } = await cli.promptDomain()
+    //   try {
+    //     await repotisory.addDomain(token, domain)
+    //     logger.info("Your domain has been added, it might take a minute for the ssl certificate to be generated.")
+    //   } catch (e) {
+    //     handleRepositoryError(e)
+    //   }
+    // }
 };
+function updateSubdomain(token) {
+    return __awaiter(this, void 0, void 0, function () {
+        var subdomain, result, e_6;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, cli_1.default.promptSubdomain()];
+                case 1:
+                    subdomain = (_a.sent()).subdomain;
+                    if (subdomain == null)
+                        return [2 /*return*/];
+                    _a.label = 2;
+                case 2:
+                    _a.trys.push([2, 4, , 5]);
+                    return [4 /*yield*/, repository_1.default.tryAddingSubdomain(token, subdomain)];
+                case 3:
+                    result = _a.sent();
+                    logger_1.default.info("\n      Your site is now available at: " + result.doc.full_subdomain + "\n    ");
+                    return [3 /*break*/, 5];
+                case 4:
+                    e_6 = _a.sent();
+                    if (e_6.response.status === 400) {
+                        logger_1.default.info("Subdomain \"" + subdomain + "\" has already been taken.");
+                        updateSubdomain(token);
+                    }
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
 function handleRepositoryError(e) {
     if (e.response.status != null) {
         if (e.response.status === 401) {
