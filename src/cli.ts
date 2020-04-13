@@ -92,11 +92,23 @@ function promptSubdomain(): Promise<{subdomain: string}> {
     ])
 }
 
+function promptInvitation(): Promise<{invitation: string}> {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "invitation",
+        message: "Your invitation:"
+      }
+    ])
+}
+
 export default {
   promptCredentials,
   promptCreateDocument,
   promptToken,
   promptConfirm,
   promptDomain,
-  promptSubdomain
+  promptSubdomain,
+  promptInvitation
 }

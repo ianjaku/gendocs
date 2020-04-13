@@ -1,8 +1,9 @@
 import axios from "axios"
 import { Page } from "./documentHandler"
 
-async function createUser(email: string, password: string) {
+async function createUser(invitation: string, email: string, password: string) {
   return post("/v1/users", {
+    invitation_token: invitation,
     user: { email, password }
   })
 }
@@ -38,6 +39,10 @@ async function tryAddingSubdomain(token: string, subdomain: string) {
   })
 }
 
+async function validateInvitation(invitation: string) {
+  return get(`/v1/users/validate_invitation/${invitation}`)
+}
+
 async function post(relativeUrl: string, data: any) {
   const response = await axios.post(baseUrl() + relativeUrl, data)
   return response.data
@@ -61,5 +66,6 @@ export default {
   singleDocument,
   publish,
   addDomain,
-  tryAddingSubdomain
+  tryAddingSubdomain,
+  validateInvitation
 }

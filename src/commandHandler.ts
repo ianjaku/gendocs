@@ -20,11 +20,36 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     logger.info(commandMessages.help())
   },
   "register": async (args: string[]) => {
+    logger.info(`
+      Registration is currently only possible after an invitation.
+      If you would to use Gendocs please send an email to ian@invacto.com
+    `)
+    const {invitation} = await cli.promptInvitation()
+
+    try {
+      await repotisory.validateInvitation(invitation)
+    } catch (e) {
+      if (e.response.status === 401) {
+        logger.info(`
+          The given invitation is invalid or has already been used.
+        `)
+      } else {
+        handleRepositoryError(e)
+      }
+      return
+    }
+    
     const {email, password} = await cli.promptCredentials()
     try {
-      await repotisory.createUser(email, password)
+      await repotisory.createUser(invitation, email, password)
       logger.info("Registration was succesful!")
     } catch (e) {
+      if (e.response.status === 401) {
+        logger.info(`
+          The given invitation is invalid or has already been used.
+        `)
+        return
+      }
       handleRepositoryError(e)
     }
   },

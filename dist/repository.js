@@ -39,10 +39,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
-function createUser(email, password) {
+function createUser(invitation, email, password) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             return [2 /*return*/, post("/v1/users", {
+                    invitation_token: invitation,
                     user: { email: email, password: password }
                 })];
         });
@@ -97,6 +98,13 @@ function tryAddingSubdomain(token, subdomain) {
         });
     });
 }
+function validateInvitation(invitation) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, get("/v1/users/validate_invitation/" + invitation)];
+        });
+    });
+}
 function post(relativeUrl, data) {
     return __awaiter(this, void 0, void 0, function () {
         var response;
@@ -135,5 +143,6 @@ exports.default = {
     singleDocument: singleDocument,
     publish: publish,
     addDomain: addDomain,
-    tryAddingSubdomain: tryAddingSubdomain
+    tryAddingSubdomain: tryAddingSubdomain,
+    validateInvitation: validateInvitation
 };

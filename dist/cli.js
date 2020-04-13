@@ -86,11 +86,22 @@ function promptSubdomain() {
         }
     ]);
 }
+function promptInvitation() {
+    return inquirer_1.default
+        .prompt([
+        {
+            type: "input",
+            name: "invitation",
+            message: "Your invitation:"
+        }
+    ]);
+}
 exports.default = {
     promptCredentials: promptCredentials,
     promptCreateDocument: promptCreateDocument,
     promptToken: promptToken,
     promptConfirm: promptConfirm,
     promptDomain: promptDomain,
-    promptSubdomain: promptSubdomain
+    promptSubdomain: promptSubdomain,
+    promptInvitation: promptInvitation
 };
