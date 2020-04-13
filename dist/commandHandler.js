@@ -166,7 +166,7 @@ var _handlers = {
                     token = _a.sent();
                     if (token == null)
                         return [2 /*return*/];
-                    return [4 /*yield*/, cli_1.default.promptDocName()];
+                    return [4 /*yield*/, cli_1.default.promptDocName("New doc name:")];
                 case 2:
                     name = _a.sent();
                     if (name == null)
@@ -174,6 +174,7 @@ var _handlers = {
                     return [4 /*yield*/, repository_1.default.updateDocument(token, { name: name })];
                 case 3:
                     _a.sent();
+                    configHandler_1.default.updateConfig({ name: name });
                     logger_1.default.info("Doc has been updated.");
                     return [2 /*return*/];
             }

@@ -38,11 +38,20 @@ async function readConfigFile(): Promise<Config> {
   return result
 }
 
+async function updateConfig(updates: any): Promise<void> {
+  const config: any = await readConfigFile()
+  for (const key in updates) {
+    config[key] = updates[key]
+  }
+  fs.writeFileSync(configFilePath(), JSON.stringify(config, null, "\t"))
+}
+
 function configFilePath() {
   return path.join(process.cwd(), "gendocs.json")
 }
 
 export default {
   createConfigFile,
-  readConfigFile
+  readConfigFile,
+  updateConfig
 }

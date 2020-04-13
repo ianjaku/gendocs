@@ -80,10 +80,28 @@ function readConfigFile() {
         });
     });
 }
+function updateConfig(updates) {
+    return __awaiter(this, void 0, void 0, function () {
+        var config, key;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, readConfigFile()];
+                case 1:
+                    config = _a.sent();
+                    for (key in updates) {
+                        config[key] = updates[key];
+                    }
+                    fs_1.default.writeFileSync(configFilePath(), JSON.stringify(config, null, "\t"));
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function configFilePath() {
     return path_1.default.join(process.cwd(), "gendocs.json");
 }
 exports.default = {
     createConfigFile: createConfigFile,
-    readConfigFile: readConfigFile
+    readConfigFile: readConfigFile,
+    updateConfig: updateConfig
 };

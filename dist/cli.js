@@ -92,8 +92,9 @@ function promptEmail() {
         });
     });
 }
-function promptDocName() {
-    return promptSingle("Document name:");
+function promptDocName(message) {
+    if (message === void 0) { message = "Doc name:"; }
+    return promptSingle(message);
 }
 function promptToken() {
     return promptSingle("Token:");

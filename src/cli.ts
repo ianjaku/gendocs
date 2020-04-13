@@ -37,8 +37,8 @@ async function promptEmail(): Promise<string> {
   return result.email
 }
 
-function promptDocName(): Promise<string> {
-  return promptSingle("Document name:")
+function promptDocName(message: string = "Doc name:"): Promise<string> {
+  return promptSingle(message)
 }
 
 function promptToken(): Promise<string> {

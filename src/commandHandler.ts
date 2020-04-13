@@ -85,10 +85,11 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     const token = await authHandler.getToken()
     if (token == null) return
     
-    const name = await cli.promptDocName()
+    const name = await cli.promptDocName("New doc name:")
     if (name == null) return
 
     await repository.updateDocument(token, { name })
+    configHandler.updateConfig({ name })
     logger.info(`Doc has been updated.`)
   },
   init: async (args: string[]) => {
