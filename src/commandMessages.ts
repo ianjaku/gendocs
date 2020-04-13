@@ -34,7 +34,9 @@ const _messages: {[command: string]: () => string} = {
   },
   publish() {
     return `
-      Commits your files to the website.
+      Commits your changes to your docs website.
+
+      It's also possible to provide the token as a parameter, ex: gendocs publish [token]
     `
   },
   "subdomain:set"() {

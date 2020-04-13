@@ -17,7 +17,7 @@ var _messages = {
         return "\n      Creates the gendocs.json file, prompts for the required data\n    ";
     },
     publish: function () {
-        return "\n      Commits your files to the website.\n    ";
+        return "\n      Commits your changes to your docs website.\n\n      It's also possible to provide the token as a parameter, ex: gendocs publish [token]\n    ";
     },
     "subdomain:set": function () {
         return "\n      Change the subdomain for a project, promts for the required data.\n    ";

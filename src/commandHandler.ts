@@ -42,9 +42,11 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     const {email, password} = await cli.promptCredentials()
     try {
       const response = await repotisory.listDocuments(email, password)
-      logger.info("[Your documents]")
+      logger.info(`
+        [Your documents]
+      `)
       response.docs.forEach((doc: any) => {
-        logger.info(`- ${doc.id} ${doc.name} : ${doc.token}`)
+        logger.info(`- ${doc.name} : ${doc.token} @ ${doc.full_subdomain}`)
       });
     } catch (e) {
       handleRepositoryError(e)
@@ -61,6 +63,9 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
   },
   publish: async (args: string[]) => {
     let {token, pages, sourcePath} = await configHandler.readConfigFile()
+    if (token == null && pages != null && args.length > 0) {
+      token = args[0]
+    }
     if (sourcePath != null) {
       pages = pages.map(p => path.join(sourcePath, p))
     }

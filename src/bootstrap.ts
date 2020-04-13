@@ -26,11 +26,7 @@ export default {
   - gendocs domains:add
   - gendocs domains:list
 
-  TODO: Show all urls to reach your page after publishing
-  TODO: Show all urls in document listing
-
   // TODO: init should download the existing pages
-  TODO: allow for token to be given with the gendocs publish [token] command so that it doesn't have to be loaded from the config.
 
   TODO: Invitation token to be able to join
   TODO: A way to create invitation tokens

@@ -121,9 +121,9 @@ var _handlers = {
                     return [4 /*yield*/, repository_1.default.listDocuments(email, password)];
                 case 3:
                     response = _b.sent();
-                    logger_1.default.info("[Your documents]");
+                    logger_1.default.info("\n        [Your documents]\n      ");
                     response.docs.forEach(function (doc) {
-                        logger_1.default.info("- " + doc.id + " " + doc.name + " : " + doc.token);
+                        logger_1.default.info("- " + doc.name + " : " + doc.token + " @ " + doc.full_subdomain);
                     });
                     return [3 /*break*/, 5];
                 case 4:
@@ -166,6 +166,9 @@ var _handlers = {
                 case 0: return [4 /*yield*/, configHandler_1.default.readConfigFile()];
                 case 1:
                     _a = _b.sent(), token = _a.token, pages = _a.pages, sourcePath = _a.sourcePath;
+                    if (token == null && pages != null && args.length > 0) {
+                        token = args[0];
+                    }
                     if (sourcePath != null) {
                         pages = pages.map(function (p) { return path_1.default.join(sourcePath, p); });
                     }
