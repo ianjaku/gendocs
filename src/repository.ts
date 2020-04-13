@@ -40,7 +40,7 @@ async function tryAddingSubdomain(token: string, subdomain: string) {
 }
 
 async function validateInvitation(invitation: string) {
-  return get(`/v1/users/validate_invitation/${invitation}`)
+  return get(`/v1/invitations/${invitation}`)
 }
 
 async function post(relativeUrl: string, data: any) {

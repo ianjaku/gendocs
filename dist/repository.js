@@ -101,7 +101,7 @@ function tryAddingSubdomain(token, subdomain) {
 function validateInvitation(invitation) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, get("/v1/users/validate_invitation/" + invitation)];
+            return [2 /*return*/, get("/v1/invitations/" + invitation)];
         });
     });
 }
