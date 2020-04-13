@@ -28,18 +28,13 @@ export default {
 
   // TODO: init should download the existing pages
 
-  TODO: Invitation token to be able to join
-  TODO: A way to create invitation tokens
-
   TODO: Custom URL
 
   TODO: show error when insert fails (when meilisearch is down for example)
 
-  TODO: projects:rename
+  TODO: docs:rename
 
-  TODO: projects:delete
-
-  TODO: projects:get-token
+  TODO: docs:delete
 
   TODO: test if email exists before entering password
 */

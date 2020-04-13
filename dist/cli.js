@@ -32,7 +32,7 @@ function promptCredentials() {
         }
     ]);
 }
-function promptCreateDocument() {
+function promptDocName() {
     return inquirer_1.default
         .prompt([
         {
@@ -98,7 +98,7 @@ function promptInvitation() {
 }
 exports.default = {
     promptCredentials: promptCredentials,
-    promptCreateDocument: promptCreateDocument,
+    promptDocName: promptDocName,
     promptToken: promptToken,
     promptConfirm: promptConfirm,
     promptDomain: promptDomain,

@@ -29,7 +29,7 @@ function promptCredentials(): Promise<{email: string, password: string}> {
     ])
 }
 
-function promptCreateDocument(): Promise<{name: string}> {
+function promptDocName(): Promise<{name: string}> {
   return inquirer
     .prompt([
       {
@@ -105,7 +105,7 @@ function promptInvitation(): Promise<{invitation: string}> {
 
 export default {
   promptCredentials,
-  promptCreateDocument,
+  promptDocName,
   promptToken,
   promptConfirm,
   promptDomain,

@@ -19,6 +19,12 @@ async function listDocuments(email: string, password: string) {
   return post("/v1/docs/list", { credentials: { email, password } })
 }
 
+async function updateDocument(token: string, updates: any) {
+  return patch("/v1/docs/" + token, {
+    doc: updates
+  })
+}
+
 async function singleDocument(token: string) {
   return get("/v1/docs/" + token)
 }
@@ -48,6 +54,11 @@ async function post(relativeUrl: string, data: any) {
   return response.data
 }
 
+async function patch(relativeUrl: string, data: any) {
+  const response = await axios.patch(baseUrl() + relativeUrl, data)
+  return response.data
+}
+
 async function get(relativeUrl: string) {
   const response = await axios.get(baseUrl() + relativeUrl)
   return response.data
@@ -67,5 +78,6 @@ export default {
   publish,
   addDomain,
   tryAddingSubdomain,
-  validateInvitation
+  validateInvitation,
+  updateDocument
 }

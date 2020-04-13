@@ -42,10 +42,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var commandMessages_1 = __importDefault(require("./commandMessages"));
 var logger_1 = __importDefault(require("./logger"));
 var cli_1 = __importDefault(require("./cli"));
-var repository_1 = __importDefault(require("./repository"));
 var configHandler_1 = __importDefault(require("./configHandler"));
 var documentHandler_1 = __importDefault(require("./documentHandler"));
-var repository_2 = __importDefault(require("./repository"));
+var repository_1 = __importDefault(require("./repository"));
 var path_1 = __importDefault(require("path"));
 var authHandler_1 = __importDefault(require("./authHandler"));
 var _handlers = {
@@ -114,7 +113,7 @@ var _handlers = {
                 case 0: return [4 /*yield*/, cli_1.default.promptCredentials()];
                 case 1:
                     _a = _b.sent(), email = _a.email, password = _a.password;
-                    return [4 /*yield*/, cli_1.default.promptCreateDocument()];
+                    return [4 /*yield*/, cli_1.default.promptDocName()];
                 case 2:
                     name = (_b.sent()).name;
                     _b.label = 3;
@@ -159,8 +158,38 @@ var _handlers = {
             }
         });
     }); },
+    "docs:rename": function (args) { return __awaiter(_this, void 0, void 0, function () {
+        var token, name, e_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, authHandler_1.default.getToken()];
+                case 1:
+                    token = _a.sent();
+                    if (token == null)
+                        return [2 /*return*/];
+                    return [4 /*yield*/, cli_1.default.promptDocName()];
+                case 2:
+                    name = (_a.sent()).name;
+                    if (name == null)
+                        return [2 /*return*/];
+                    _a.label = 3;
+                case 3:
+                    _a.trys.push([3, 5, , 6]);
+                    return [4 /*yield*/, repository_1.default.updateDocument(token, { name: name })];
+                case 4:
+                    _a.sent();
+                    logger_1.default.info("Doc has been updated.");
+                    return [3 /*break*/, 6];
+                case 5:
+                    e_5 = _a.sent();
+                    handleRepositoryError(e_5);
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
+            }
+        });
+    }); },
     init: function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var token, response, e_5;
+        var token, response, e_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, cli_1.default.promptToken()];
@@ -177,15 +206,15 @@ var _handlers = {
                     _a.sent();
                     return [3 /*break*/, 6];
                 case 5:
-                    e_5 = _a.sent();
-                    handleRepositoryError(e_5);
+                    e_6 = _a.sent();
+                    handleRepositoryError(e_6);
                     return [3 /*break*/, 6];
                 case 6: return [2 /*return*/];
             }
         });
     }); },
     publish: function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var _a, token, pages, sourcePath, generatedPages, result, e_6;
+        var _a, token, pages, sourcePath, generatedPages, result, e_7;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4 /*yield*/, configHandler_1.default.readConfigFile()];
@@ -201,14 +230,14 @@ var _handlers = {
                     _b.label = 2;
                 case 2:
                     _b.trys.push([2, 4, , 5]);
-                    return [4 /*yield*/, repository_2.default.publish(token, generatedPages)];
+                    return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
                 case 3:
                     result = _b.sent();
                     logger_1.default.info("\n        Succesfully updated your documentation!\n        Your site is available at: " + result.doc.full_subdomain + "\n      ");
                     return [3 /*break*/, 5];
                 case 4:
-                    e_6 = _b.sent();
-                    handleRepositoryError(e_6);
+                    e_7 = _b.sent();
+                    handleRepositoryError(e_7);
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }
@@ -236,7 +265,7 @@ var _handlers = {
     //   if (token == null) return
     //   const { domain } = await cli.promptDomain()
     //   try {
-    //     await repotisory.addDomain(token, domain)
+    //     await repository.addDomain(token, domain)
     //     logger.info("Your domain has been added, it might take a minute for the ssl certificate to be generated.")
     //   } catch (e) {
     //     handleRepositoryError(e)
@@ -245,7 +274,7 @@ var _handlers = {
 };
 function updateSubdomain(token) {
     return __awaiter(this, void 0, void 0, function () {
-        var subdomain, result, e_7;
+        var subdomain, result, e_8;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, cli_1.default.promptSubdomain()];
@@ -262,8 +291,8 @@ function updateSubdomain(token) {
                     logger_1.default.info("\n      Your site is now available at: " + result.doc.full_subdomain + "\n    ");
                     return [3 /*break*/, 5];
                 case 4:
-                    e_7 = _a.sent();
-                    if (e_7.response.status === 400) {
+                    e_8 = _a.sent();
+                    if (e_8.response.status === 400) {
                         logger_1.default.info("Subdomain \"" + subdomain + "\" has already been taken.");
                         updateSubdomain(token);
                     }

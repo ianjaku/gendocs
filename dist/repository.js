@@ -66,6 +66,15 @@ function listDocuments(email, password) {
         });
     });
 }
+function updateDocument(token, updates) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, patch("/v1/docs/" + token, {
+                    doc: updates
+                })];
+        });
+    });
+}
 function singleDocument(token) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -118,6 +127,19 @@ function post(relativeUrl, data) {
         });
     });
 }
+function patch(relativeUrl, data) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, axios_1.default.patch(baseUrl() + relativeUrl, data)];
+                case 1:
+                    response = _a.sent();
+                    return [2 /*return*/, response.data];
+            }
+        });
+    });
+}
 function get(relativeUrl) {
     return __awaiter(this, void 0, void 0, function () {
         var response;
@@ -144,5 +166,6 @@ exports.default = {
     publish: publish,
     addDomain: addDomain,
     tryAddingSubdomain: tryAddingSubdomain,
-    validateInvitation: validateInvitation
+    validateInvitation: validateInvitation,
+    updateDocument: updateDocument
 };

@@ -1,7 +1,6 @@
 import commandMessages from "./commandMessages"
 import logger from "./logger"
 import cli from "./cli"
-import repotisory from "./repository"
 import configHandler from "./configHandler"
 import documentHandler from "./documentHandler"
 import repository from "./repository"
@@ -27,7 +26,7 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     const {invitation} = await cli.promptInvitation()
 
     try {
-      await repotisory.validateInvitation(invitation)
+      await repository.validateInvitation(invitation)
     } catch (e) {
       if (e.response.status === 401) {
         logger.info(`
@@ -41,7 +40,7 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     
     const {email, password} = await cli.promptCredentials()
     try {
-      await repotisory.createUser(invitation, email, password)
+      await repository.createUser(invitation, email, password)
       logger.info("Registration was succesful!")
     } catch (e) {
       if (e.response.status === 401) {
@@ -55,9 +54,9 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
   },
   "docs:create": async (args: string[]) => {
     const {email, password} = await cli.promptCredentials()
-    const {name} = await cli.promptCreateDocument()
+    const {name} = await cli.promptDocName()
     try {
-      const response = await repotisory.createDocument(name, email, password)
+      const response = await repository.createDocument(name, email, password)
       logger.info(`Document created successfully! Your token: ${response.doc.token}`)
     } catch (e) {
       handleRepositoryError(e)
@@ -66,7 +65,7 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
   "docs:list": async (args: string[]) => {
     const {email, password} = await cli.promptCredentials()
     try {
-      const response = await repotisory.listDocuments(email, password)
+      const response = await repository.listDocuments(email, password)
       logger.info(`
         [Your documents]
       `)
@@ -77,10 +76,24 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
       handleRepositoryError(e)
     }
   },
+  "docs:rename": async (args: string[]) => {
+    const token = await authHandler.getToken()
+    if (token == null) return
+    
+    const {name} = await cli.promptDocName()
+    if (name == null) return
+
+    try {
+      await repository.updateDocument(token, { name })
+      logger.info(`Doc has been updated.`)
+    } catch (e) {
+      handleRepositoryError(e)
+    }
+  },
   init: async (args: string[]) => {
     const {token} = await cli.promptToken()
     try {
-      const response = await repotisory.singleDocument(token)
+      const response = await repository.singleDocument(token)
       await configHandler.createConfigFile(token, response.doc.name)
     } catch (e) {
       handleRepositoryError(e)
@@ -119,7 +132,7 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
   //   if (token == null) return
   //   const { domain } = await cli.promptDomain()
   //   try {
-  //     await repotisory.addDomain(token, domain)
+  //     await repository.addDomain(token, domain)
   //     logger.info("Your domain has been added, it might take a minute for the ssl certificate to be generated.")
   //   } catch (e) {
   //     handleRepositoryError(e)
@@ -132,7 +145,7 @@ async function updateSubdomain(token: string) {
   if (subdomain == null) return
 
   try {
-    const result = await repotisory.tryAddingSubdomain(token, subdomain)
+    const result = await repository.tryAddingSubdomain(token, subdomain)
     logger.info(`
       Your site is now available at: ${result.doc.full_subdomain}
     `)
