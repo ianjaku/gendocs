@@ -39,7 +39,17 @@ export default {
 
   TODO: show error when insert fails (when meilisearch is down for example)
 
+  TODO: check if adding multiple domains at the same time works
 
+  TODO: put generic nginx conf in different file
+
+  TODO: docs:remove
+
+  TODO: if certificate already exists, overwrite/keep (so we don't get stuck)
+
+  TODO: remove /1/pages endpoints and provide text when creating a doc saying "please use commands to add a domain"
+
+  TODO: remove trailing . from custom domain
 
   Future:
     - Custom css

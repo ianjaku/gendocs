@@ -43,6 +43,10 @@ async function addDomain(token: string, domainName: string) {
   })
 }
 
+async function domainStatus(domainName: string) {
+  return get(`/v1/domains/${domainName}`)
+}
+
 async function tryAddingSubdomain(token: string, subdomain: string) {
   return post(`/v1/docs/${token}/subdomain`, {
     subdomain
@@ -84,5 +88,6 @@ export default {
   tryAddingSubdomain,
   validateInvitation,
   updateDocument,
-  doesEmailExist
+  doesEmailExist,
+  domainStatus
 }

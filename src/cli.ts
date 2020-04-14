@@ -56,20 +56,27 @@ function promptConfirm(message: string): Promise<{result: boolean}> {
     ])
 }
 
-function promptDomain(): Promise<{domain: string}> {
+async function promptDomain(): Promise<string> {
   logger.info(`
     Which domain would you like to add?
 
     Format: example.com
   `)
-  return inquirer
+  const result = await inquirer
     .prompt([
       {
         type: "input",
-        name: "result",
-        message: "domain"
+        name: "domain",
+        message: "New custom domain:",
+        transformer(input: string, meta: any) {
+          return input
+            .replace(/[^a-z0-9\.\-\_\~]/gi, "")
+            .replace(/http(s)?\:\/\//gi, "")
+            .replace(/^www/gi, "")
+        }
       }
     ])
+  return result.domain
 }
 
 function promptSubdomain(): Promise<{subdomain: string}> {

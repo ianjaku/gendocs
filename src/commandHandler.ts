@@ -129,21 +129,63 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     if (token == null) return
 
     updateSubdomain(token)
+  },
+  "domains:add": async (args: string[]) => {
+    const token = await authHandler.getToken()
+    if (token == null) return
+    const domain = await cli.promptDomain()
+    await repository.addDomain(token, domain)
+    
+    logger.info(`
+    Generating SSL Certificate...
+    `)
+
+
+    let timeout: any
+    const interval = setInterval(async () => {
+      const result = await repository.domainStatus(domain)
+      if (result.status === "ok") {
+        logger.info(`
+    Your domain has been added!
+    The site is now available at https://${domain}/
+        `)
+
+        if (timeout != null) {
+          clearTimeout(timeout)
+        }
+        clearInterval(interval)
+        return
+      }
+      if (result.status === "pending") {
+        return
+      }
+      if (result.status === "error") {
+
+        if (result.context == "invalid_domain") {
+          logger.info(`
+    The domain "${domain}" seems to be malformed.
+    Please make sure your domain is in the format somedomain.com
+          `)
+          return
+        }
+        
+        logger.error(`
+    Something seems to have gone wrong while trying to generate your ssl certificates.
+    Error code: ${result.context}
+        `)
+
+        if (timeout != null) {
+          clearTimeout(timeout)
+        }
+        clearInterval(interval)
+      }
+    }, 500)
+
+    timeout = setTimeout(() => {
+      logger.error("Something seems to have gone wrong. Please contact us through our github.")
+      clearInterval(interval)
+    }, 20000)
   }
-  // "domains:add": async (args: string[]) => {
-  //   let { token } = await configHandler.readConfigFile()
-  //   if (token == null) {
-  //     token = (await cli.promptToken()).token
-  //   }
-  //   if (token == null) return
-  //   const { domain } = await cli.promptDomain()
-  //   try {
-  //     await repository.addDomain(token, domain)
-  //     logger.info("Your domain has been added, it might take a minute for the ssl certificate to be generated.")
-  //   } catch (e) {
-  //     handleRepositoryError(e)
-  //   }
-  // }
 }
 
 async function updateSubdomain(token: string) {
@@ -164,6 +206,10 @@ async function updateSubdomain(token: string) {
 }
 
 function handleCommandHandlerError(e: any) {
+  if (e.response == null) {
+    logger.error(e.message, e)
+    return
+  }
   if (e.response.status != null) {
     if (e.response.status === 401) {
       logger.error("Unauthorized")
@@ -173,8 +219,12 @@ function handleCommandHandlerError(e: any) {
   if (e.response != null && e.response.data != null && e.response.data.errors != null) {
     const errors = e.response.data.errors
     for (const key in errors) {
-      for (const message of errors[key]) {
-        logger.error(`${key} ${message}`)
+      if (typeof errors[key] === "string") {
+        logger.error(errors[key])
+      } else {
+        for (const message of errors[key]) {
+          logger.error(`${key} ${message}`)
+        }
       }
     }
   } else {

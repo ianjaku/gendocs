@@ -243,21 +243,65 @@ var _handlers = {
                     return [2 /*return*/];
             }
         });
+    }); },
+    "domains:add": function (args) { return __awaiter(_this, void 0, void 0, function () {
+        var token, domain, timeout, interval;
+        var _this = this;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, authHandler_1.default.getToken()];
+                case 1:
+                    token = _a.sent();
+                    if (token == null)
+                        return [2 /*return*/];
+                    return [4 /*yield*/, cli_1.default.promptDomain()];
+                case 2:
+                    domain = _a.sent();
+                    return [4 /*yield*/, repository_1.default.addDomain(token, domain)];
+                case 3:
+                    _a.sent();
+                    logger_1.default.info("\n    Generating SSL Certificate...\n    ");
+                    interval = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                        var result;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, repository_1.default.domainStatus(domain)];
+                                case 1:
+                                    result = _a.sent();
+                                    if (result.status === "ok") {
+                                        logger_1.default.info("\n    Your domain has been added!\n    The site is now available at https://" + domain + "/\n        ");
+                                        if (timeout != null) {
+                                            clearTimeout(timeout);
+                                        }
+                                        clearInterval(interval);
+                                        return [2 /*return*/];
+                                    }
+                                    if (result.status === "pending") {
+                                        return [2 /*return*/];
+                                    }
+                                    if (result.status === "error") {
+                                        if (result.context == "invalid_domain") {
+                                            logger_1.default.info("\n    The domain \"" + domain + "\" seems to be malformed.\n    Please make sure your domain is in the format somedomain.com\n          ");
+                                            return [2 /*return*/];
+                                        }
+                                        logger_1.default.error("\n    Something seems to have gone wrong while trying to generate your ssl certificates.\n    Error code: " + result.context + "\n        ");
+                                        if (timeout != null) {
+                                            clearTimeout(timeout);
+                                        }
+                                        clearInterval(interval);
+                                    }
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 500);
+                    timeout = setTimeout(function () {
+                        logger_1.default.error("Something seems to have gone wrong. Please contact us through our github.");
+                        clearInterval(interval);
+                    }, 20000);
+                    return [2 /*return*/];
+            }
+        });
     }); }
-    // "domains:add": async (args: string[]) => {
-    //   let { token } = await configHandler.readConfigFile()
-    //   if (token == null) {
-    //     token = (await cli.promptToken()).token
-    //   }
-    //   if (token == null) return
-    //   const { domain } = await cli.promptDomain()
-    //   try {
-    //     await repository.addDomain(token, domain)
-    //     logger.info("Your domain has been added, it might take a minute for the ssl certificate to be generated.")
-    //   } catch (e) {
-    //     handleRepositoryError(e)
-    //   }
-    // }
 };
 function updateSubdomain(token) {
     return __awaiter(this, void 0, void 0, function () {
@@ -290,6 +334,10 @@ function updateSubdomain(token) {
     });
 }
 function handleCommandHandlerError(e) {
+    if (e.response == null) {
+        logger_1.default.error(e.message, e);
+        return;
+    }
     if (e.response.status != null) {
         if (e.response.status === 401) {
             logger_1.default.error("Unauthorized");
@@ -299,9 +347,14 @@ function handleCommandHandlerError(e) {
     if (e.response != null && e.response.data != null && e.response.data.errors != null) {
         var errors = e.response.data.errors;
         for (var key in errors) {
-            for (var _i = 0, _a = errors[key]; _i < _a.length; _i++) {
-                var message = _a[_i];
-                logger_1.default.error(key + " " + message);
+            if (typeof errors[key] === "string") {
+                logger_1.default.error(errors[key]);
+            }
+            else {
+                for (var _i = 0, _a = errors[key]; _i < _a.length; _i++) {
+                    var message = _a[_i];
+                    logger_1.default.error(key + " " + message);
+                }
             }
         }
     }

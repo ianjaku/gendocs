@@ -105,6 +105,13 @@ function addDomain(token, domainName) {
         });
     });
 }
+function domainStatus(domainName) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, get("/v1/domains/" + domainName)];
+        });
+    });
+}
 function tryAddingSubdomain(token, subdomain) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -175,5 +182,6 @@ exports.default = {
     tryAddingSubdomain: tryAddingSubdomain,
     validateInvitation: validateInvitation,
     updateDocument: updateDocument,
-    doesEmailExist: doesEmailExist
+    doesEmailExist: doesEmailExist,
+    domainStatus: domainStatus
 };

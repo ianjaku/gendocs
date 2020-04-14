@@ -4,7 +4,12 @@ function info(msg) {
     console.log(msg);
 }
 function error(msg, context) {
-    console.error("[GENDOCS ERROR] ", msg, context);
+    if (context == null) {
+        console.error("[GENDOCS ERROR] ", msg);
+    }
+    else {
+        console.error("[GENDOCS ERROR] ", msg, context);
+    }
 }
 exports.default = {
     info: info,

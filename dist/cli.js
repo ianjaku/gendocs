@@ -110,15 +110,32 @@ function promptConfirm(message) {
     ]);
 }
 function promptDomain() {
-    logger_1.default.info("\n    Which domain would you like to add?\n\n    Format: example.com\n  ");
-    return inquirer_1.default
-        .prompt([
-        {
-            type: "input",
-            name: "result",
-            message: "domain"
-        }
-    ]);
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    logger_1.default.info("\n    Which domain would you like to add?\n\n    Format: example.com\n  ");
+                    return [4 /*yield*/, inquirer_1.default
+                            .prompt([
+                            {
+                                type: "input",
+                                name: "domain",
+                                message: "New custom domain:",
+                                transformer: function (input, meta) {
+                                    return input
+                                        .replace(/[^a-z0-9\.\-\_\~]/gi, "")
+                                        .replace(/http(s)?\:\/\//gi, "")
+                                        .replace(/^www/gi, "");
+                                }
+                            }
+                        ])];
+                case 1:
+                    result = _a.sent();
+                    return [2 /*return*/, result.domain];
+            }
+        });
+    });
 }
 function promptSubdomain() {
     return inquirer_1.default
