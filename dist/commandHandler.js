@@ -198,12 +198,12 @@ var _handlers = {
         });
     }); },
     publish: function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var _a, token, pages, sourcePath, generatedPages, result, e_3;
+        var _a, token, pages, sourcePath, name, generatedPages, result, e_3;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4 /*yield*/, configHandler_1.default.readConfigFile()];
                 case 1:
-                    _a = _b.sent(), token = _a.token, pages = _a.pages, sourcePath = _a.sourcePath;
+                    _a = _b.sent(), token = _a.token, pages = _a.pages, sourcePath = _a.sourcePath, name = _a.name;
                     if (token == null && pages != null && args.length > 0) {
                         token = args[0];
                     }
@@ -211,6 +211,9 @@ var _handlers = {
                         pages = pages.map(function (p) { return path_1.default.join(sourcePath, p); });
                     }
                     generatedPages = documentHandler_1.default.loadPages(pages);
+                    if (generatedPages.length === 0) {
+                        logger_1.default.info("\n        No pages were found.\n        Please add your pages to gendocs.json.\n\n        Example:\n\n          {\n            name: \"" + name + "\",\n            token: \"***********\",\n            pages: [\n              \"./my_page\",\n            ]\n          }\n      ");
+                    }
                     _b.label = 2;
                 case 2:
                     _b.trys.push([2, 4, , 5]);

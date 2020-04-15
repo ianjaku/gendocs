@@ -99,7 +99,7 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     await configHandler.createConfigFile(token, response.doc.name)
   },
   publish: async (args: string[]) => {
-    let {token, pages, sourcePath} = await configHandler.readConfigFile()
+    let {token, pages, sourcePath, name} = await configHandler.readConfigFile()
     if (token == null && pages != null && args.length > 0) {
       token = args[0]
     }
@@ -107,6 +107,22 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
       pages = pages.map(p => path.join(sourcePath, p))
     }
     const generatedPages = documentHandler.loadPages(pages)
+    if (generatedPages.length === 0) {
+      logger.info(`
+        No pages were found.
+        Please add your pages to gendocs.json.
+
+        Example:
+
+          {
+            name: "${name}",
+            token: "***********",
+            pages: [
+              "./my_page",
+            ]
+          }
+      `)
+    }
 
     try {
       const result = await repository.publish(token, generatedPages)
