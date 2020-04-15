@@ -244,11 +244,11 @@ var _handlers = {
                     else {
                         domains = result.domains;
                         if (result.doc.subdomain != null) {
-                            domains.push({ name: result.doc.full_subdomain });
+                            domains.push({ full_url: result.doc.full_subdomain });
                         }
                         text_1 = "\n        Succesfully updated your documentation!\n\n        Your site is available at:";
                         domains.forEach(function (domain) {
-                            text_1 += "\n\t   - " + domain.name;
+                            text_1 += "\n\t   - " + domain.full_url;
                         });
                         logger_1.default.info(text_1 + "\n");
                     }

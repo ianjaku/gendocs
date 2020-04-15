@@ -153,14 +153,14 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
       } else {
         let domains = result.domains
         if (result.doc.subdomain != null) {
-          domains.push({name: result.doc.full_subdomain})
+          domains.push({full_url: result.doc.full_subdomain})
         }
         let text = `
         Succesfully updated your documentation!
 
         Your site is available at:`
-        domains.forEach((domain: {name: string}) => {
-          text += `\n\t   - ${domain.name}`
+        domains.forEach((domain: {full_url: string}) => {
+          text += `\n\t   - ${domain.full_url}`
         });
 
         logger.info(text + "\n")

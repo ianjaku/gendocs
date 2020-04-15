@@ -188,8 +188,8 @@ function del(relativeUrl) {
     });
 }
 function baseUrl() {
-    // return "https://gendocs.io/api"
-    return "http://localhost:4000/api";
+    return "https://gendocs.io/api";
+    // return "http://localhost:4000/api"
     // return "https://gendocs.gendocs.invacto.com/api"
 }
 exports.default = {

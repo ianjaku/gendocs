@@ -1,7 +1,7 @@
 {
-  "name": "@gendocs/cli",
-  "version": "0.0.1",
-  "description": "Gendocs CLI",
+  "name": "@invacto/gendocs",
+  "version": "1.0.1",
+  "description": "GenDocs CLI",
   "main": "bin/gendocs.js",
   "scripts": {
     "dev": "tsc --watch"
@@ -11,17 +11,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/gendocs/mono-cli.git"
+    "url": "git+https://github.com/invacto/gendocs"
   },
   "bin": {
     "gendocs": "./bin/gendocs.js"
   },
   "author": "Invacto <ian@invacto.com>",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/gendocs/mono-cli/issues"
+    "url": "https://github.com/invacto/gendocs/issues"
   },
-  "homepage": "https://gitlab.com/gendocs/mono-cli#readme",
+  "homepage": "https://github.com/invacto/gendocs",
   "dependencies": {
     "@types/inquirer": "^6.5.0",
     "@types/marked": "^0.7.3",
