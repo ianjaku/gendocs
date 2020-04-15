@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var _messages = {
     help: function () {
-        return "\n      Available commands:\n        - help \n        - register\n        - docs:create\n        - docs:list\n        - init\n        - publish\n        - subdomain:set\n    ";
+        return "\n      Available commands:\n        - help \n        - register\n        - docs:create\n        - docs:list\n        - docs:remove\n        - init\n        - publish\n        - subdomain:set\n    ";
     },
     register: function () {
         return "\n      Registers a new user, prompts for the required data.\n    ";
@@ -21,6 +21,9 @@ var _messages = {
     },
     "subdomain:set": function () {
         return "\n      Change the subdomain for a project, promts for the required data.\n    ";
+    },
+    "docs:remove": function () {
+        return "\n      Removes a doc, this action can not be undone!\n    ";
     }
 };
 exports.default = _messages;

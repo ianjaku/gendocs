@@ -131,7 +131,7 @@ var _handlers = {
                     return [4 /*yield*/, repository_1.default.createDocument(name, email, password)];
                 case 4:
                     response = _a.sent();
-                    logger_1.default.info("Document created successfully! Your token: " + response.doc.token);
+                    logger_1.default.info("\n      Document created successfully! \n      Your token: " + response.doc.token + "\n\n      Use \"gendocs init\" in the directory where you'd like your config file to live.\n\n      If you lose the token, try using \"gendocs docs:list\" to recover it.\n    ");
                     return [2 /*return*/];
             }
         });
@@ -180,6 +180,23 @@ var _handlers = {
             }
         });
     }); },
+    "docs:remove": function (args) { return __awaiter(_this, void 0, void 0, function () {
+        var token, data;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, cli_1.default.promptToken()];
+                case 1:
+                    token = _a.sent();
+                    if (token == null)
+                        return [2 /*return*/];
+                    return [4 /*yield*/, repository_1.default.deleteDocument(token)];
+                case 2:
+                    data = _a.sent();
+                    logger_1.default.info("Doc \"" + data.doc.name + "\" has been removed.");
+                    return [2 /*return*/];
+            }
+        });
+    }); },
     init: function (args) { return __awaiter(_this, void 0, void 0, function () {
         var token, response;
         return __generator(this, function (_a) {
@@ -198,7 +215,7 @@ var _handlers = {
         });
     }); },
     publish: function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var _a, token, pages, sourcePath, name, generatedPages, result, e_3;
+        var _a, token, pages, sourcePath, name, generatedPages, result, domains, text_1, e_3;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4 /*yield*/, configHandler_1.default.readConfigFile()];
@@ -213,6 +230,7 @@ var _handlers = {
                     generatedPages = documentHandler_1.default.loadPages(pages);
                     if (generatedPages.length === 0) {
                         logger_1.default.info("\n        No pages were found.\n        Please add your pages to gendocs.json.\n\n        Example:\n\n          {\n            name: \"" + name + "\",\n            token: \"***********\",\n            pages: [\n              \"./my_page\",\n            ]\n          }\n      ");
+                        return [2 /*return*/];
                     }
                     _b.label = 2;
                 case 2:
@@ -220,7 +238,20 @@ var _handlers = {
                     return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
                 case 3:
                     result = _b.sent();
-                    logger_1.default.info("\n        Succesfully updated your documentation!\n        Your site is available at: " + result.doc.full_subdomain + "\n      ");
+                    if (result.doc.subdomain == null && result.domains.length == 0) {
+                        logger_1.default.info("\n        Succesfully updated your documentation!\n        You don't seem to have selected a subdomain yet.\n        \n        Please select a subdomain using the command: gendocs subdomain:set\n        or\n        Add your own custom domain using the command: gendocs domains:add\n        ");
+                    }
+                    else {
+                        domains = result.domains;
+                        if (result.doc.subdomain != null) {
+                            domains.push({ name: result.doc.full_subdomain });
+                        }
+                        text_1 = "\n        Succesfully updated your documentation!\n\n        Your site is available at:";
+                        domains.forEach(function (domain) {
+                            text_1 += "\n\t   - " + domain.name;
+                        });
+                        logger_1.default.info(text_1 + "\n");
+                    }
                     return [3 /*break*/, 5];
                 case 4:
                     e_3 = _b.sent();

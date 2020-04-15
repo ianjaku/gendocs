@@ -82,6 +82,13 @@ function updateDocument(token, updates) {
         });
     });
 }
+function deleteDocument(token) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, del("/v1/docs/" + token)];
+        });
+    });
+}
 function singleDocument(token) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -167,9 +174,22 @@ function get(relativeUrl) {
         });
     });
 }
+function del(relativeUrl) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, axios_1.default.delete(baseUrl() + relativeUrl)];
+                case 1:
+                    response = _a.sent();
+                    return [2 /*return*/, response.data];
+            }
+        });
+    });
+}
 function baseUrl() {
-    return "https://gendocs.io/api";
-    // return "http://localhost:4000/api"
+    // return "https://gendocs.io/api"
+    return "http://localhost:4000/api";
     // return "https://gendocs.gendocs.invacto.com/api"
 }
 exports.default = {
@@ -183,5 +203,6 @@ exports.default = {
     validateInvitation: validateInvitation,
     updateDocument: updateDocument,
     doesEmailExist: doesEmailExist,
-    domainStatus: domainStatus
+    domainStatus: domainStatus,
+    deleteDocument: deleteDocument
 };

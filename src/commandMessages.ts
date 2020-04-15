@@ -7,6 +7,7 @@ const _messages: {[command: string]: () => string} = {
         - register
         - docs:create
         - docs:list
+        - docs:remove
         - init
         - publish
         - subdomain:set
@@ -42,6 +43,11 @@ const _messages: {[command: string]: () => string} = {
   "subdomain:set"() {
     return `
       Change the subdomain for a project, promts for the required data.
+    `
+  },
+  "docs:remove"() {
+    return `
+      Removes a doc, this action can not be undone!
     `
   }
 }

@@ -29,6 +29,10 @@ async function updateDocument(token: string, updates: any) {
   })
 }
 
+async function deleteDocument(token: string) {
+  return del("/v1/docs/" + token)
+}
+
 async function singleDocument(token: string) {
   return get("/v1/docs/" + token)
 }
@@ -72,9 +76,14 @@ async function get(relativeUrl: string) {
   return response.data
 }
 
+async function del(relativeUrl: string) {
+  const response = await axios.delete(baseUrl() + relativeUrl)
+  return response.data
+}
+
 function baseUrl() {
-  return "https://gendocs.io/api"
-  // return "http://localhost:4000/api"
+  // return "https://gendocs.io/api"
+  return "http://localhost:4000/api"
   // return "https://gendocs.gendocs.invacto.com/api"
 }
 
@@ -89,5 +98,6 @@ export default {
   validateInvitation,
   updateDocument,
   doesEmailExist,
-  domainStatus
+  domainStatus,
+  deleteDocument
 }

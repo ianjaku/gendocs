@@ -1,5 +1,5 @@
 {
-  "name": "gendocs-cli",
+  "name": "@gendocs/cli",
   "version": "0.0.1",
   "description": "Gendocs CLI",
   "main": "bin/gendocs.js",

@@ -67,7 +67,14 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     const name = await cli.promptDocName()
 
     const response = await repository.createDocument(name, email, password)
-    logger.info(`Document created successfully! Your token: ${response.doc.token}`)
+    logger.info(`
+      Document created successfully! 
+      Your token: ${response.doc.token}
+
+      Use "gendocs init" in the directory where you'd like your config file to live.
+
+      If you lose the token, try using "gendocs docs:list" to recover it.
+    `)
   },
   "docs:list": async (args: string[]) => {
     const email = await cli.promptEmail()
@@ -91,6 +98,13 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     await repository.updateDocument(token, { name })
     configHandler.updateConfig({ name })
     logger.info(`Doc has been updated.`)
+  },
+  "docs:remove": async (args: string[]) => {
+    const token = await cli.promptToken()
+    if (token == null) return
+
+    const data = await repository.deleteDocument(token)
+    logger.info(`Doc "${data.doc.name}" has been removed.`)
   },
   init: async (args: string[]) => {
     const token = await cli.promptToken()
@@ -122,14 +136,35 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
             ]
           }
       `)
+      return
     }
 
     try {
       const result = await repository.publish(token, generatedPages)
-      logger.info(`
+      if (result.doc.subdomain == null && result.domains.length == 0) {
+        logger.info(`
         Succesfully updated your documentation!
-        Your site is available at: ${result.doc.full_subdomain}
-      `)
+        You don't seem to have selected a subdomain yet.
+        
+        Please select a subdomain using the command: gendocs subdomain:set
+        or
+        Add your own custom domain using the command: gendocs domains:add
+        `)
+      } else {
+        let domains = result.domains
+        if (result.doc.subdomain != null) {
+          domains.push({name: result.doc.full_subdomain})
+        }
+        let text = `
+        Succesfully updated your documentation!
+
+        Your site is available at:`
+        domains.forEach((domain: {name: string}) => {
+          text += `\n\t   - ${domain.name}`
+        });
+
+        logger.info(text + "\n")
+      }
     } catch (e) {
       if (e.response.status === 403) {
         logger.info(`
