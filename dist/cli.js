@@ -61,7 +61,7 @@ function promptPassword() {
                     ])];
                 case 1:
                     result = _a.sent();
-                    return [2 /*return*/, result.password];
+                    return [2 /*return*/, result.password.trim()];
             }
         });
     });
@@ -87,7 +87,7 @@ function promptEmail() {
                     ])];
                 case 1:
                     result = _a.sent();
-                    return [2 /*return*/, result.email];
+                    return [2 /*return*/, result.email.trim()];
             }
         });
     });
@@ -125,14 +125,14 @@ function promptDomain() {
                                 transformer: function (input, meta) {
                                     return input
                                         .replace(/[^a-z0-9\.\-\_\~]/gi, "")
-                                        .replace(/http(s)?\:\/\//gi, "")
+                                        .replace(/http(s)?/gi, "")
                                         .replace(/^www/gi, "");
                                 }
                             }
                         ])];
                 case 1:
                     result = _a.sent();
-                    return [2 /*return*/, result.domain];
+                    return [2 /*return*/, result.domain.trim()];
             }
         });
     });
@@ -168,7 +168,7 @@ function promptSingle(message) {
                     ])];
                 case 1:
                     result = _a.sent();
-                    return [2 /*return*/, result.value];
+                    return [2 /*return*/, result.value.trim()];
             }
         });
     });

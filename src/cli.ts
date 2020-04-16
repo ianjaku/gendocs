@@ -16,7 +16,7 @@ async function promptPassword(): Promise<string> {
         }
       }
     ])
-  return result.password
+  return result.password.trim()
 }
 
 async function promptEmail(): Promise<string> {
@@ -34,7 +34,7 @@ async function promptEmail(): Promise<string> {
         }
       },
     ])
-  return result.email
+  return result.email.trim()
 }
 
 function promptDocName(message: string = "Doc name:"): Promise<string> {
@@ -71,12 +71,12 @@ async function promptDomain(): Promise<string> {
         transformer(input: string, meta: any) {
           return input
             .replace(/[^a-z0-9\.\-\_\~]/gi, "")
-            .replace(/http(s)?\:\/\//gi, "")
+            .replace(/http(s)?/gi, "")
             .replace(/^www/gi, "")
         }
       }
     ])
-  return result.domain
+  return result.domain.trim()
 }
 
 function promptSubdomain(): Promise<{subdomain: string}> {
@@ -107,7 +107,7 @@ async function promptSingle(message: string): Promise<string> {
       }
     ])
 
-  return result.value
+  return result.value.trim()
 }
 
 export default {
