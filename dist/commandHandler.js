@@ -47,6 +47,7 @@ var documentHandler_1 = __importDefault(require("./documentHandler"));
 var repository_1 = __importDefault(require("./repository"));
 var path_1 = __importDefault(require("path"));
 var authHandler_1 = __importDefault(require("./authHandler"));
+var initHandler_1 = __importDefault(require("./initHandler"));
 var _handlers = {
     help: function (args) {
         if (args.length > 0) {
@@ -207,7 +208,7 @@ var _handlers = {
                     return [4 /*yield*/, repository_1.default.singleDocument(token)];
                 case 2:
                     response = _a.sent();
-                    return [4 /*yield*/, configHandler_1.default.createConfigFile(token, response.doc.name)];
+                    return [4 /*yield*/, initHandler_1.default.init(response.doc.name, token)];
                 case 3:
                     _a.sent();
                     return [2 /*return*/];
@@ -215,29 +216,35 @@ var _handlers = {
         });
     }); },
     publish: function (args) { return __awaiter(_this, void 0, void 0, function () {
-        var _a, token, pages, sourcePath, name, generatedPages, result, domains, text_1, e_3;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var config, token, pages, sourcePath, generatedPages, result, domains, text_1, e_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0: return [4 /*yield*/, configHandler_1.default.readConfigFile()];
                 case 1:
-                    _a = _b.sent(), token = _a.token, pages = _a.pages, sourcePath = _a.sourcePath, name = _a.name;
-                    if (token == null && pages != null && args.length > 0) {
-                        token = args[0];
+                    config = _a.sent();
+                    if (config == null) {
+                        logger_1.default.error("\n        Config file could not be found.\n        Use \"gendocs init\" to generate the config file.\n      ");
+                        return [2 /*return*/];
                     }
-                    if (sourcePath != null) {
-                        pages = pages.map(function (p) { return path_1.default.join(sourcePath, p); });
+                    return [4 /*yield*/, authHandler_1.default.getToken(args)];
+                case 2:
+                    token = _a.sent();
+                    if (token == null) {
+                        throw Error("\n        We couldn't find a token to authenticate you.\n        Please provide a token in one of these ways:\n          - in a gendocs-token file\n          - in a gendocs.json file\n          - as a argument to \"gendocs publish [token]\"\n      ");
                     }
+                    sourcePath = config.sourcePath || "";
+                    pages = config.pages.map(function (p) { return path_1.default.join(sourcePath, p); });
                     generatedPages = documentHandler_1.default.loadPages(pages);
                     if (generatedPages.length === 0) {
                         logger_1.default.info("\n        No pages were found.\n        Please add your pages to gendocs.json.\n\n        Example:\n\n          {\n            name: \"" + name + "\",\n            token: \"***********\",\n            pages: [\n              \"./my_page\",\n            ]\n          }\n      ");
                         return [2 /*return*/];
                     }
-                    _b.label = 2;
-                case 2:
-                    _b.trys.push([2, 4, , 5]);
-                    return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
+                    _a.label = 3;
                 case 3:
-                    result = _b.sent();
+                    _a.trys.push([3, 5, , 6]);
+                    return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
+                case 4:
+                    result = _a.sent();
                     if (result.doc.subdomain == null && result.domains.length == 0) {
                         logger_1.default.info("\n        Succesfully updated your documentation!\n        You don't seem to have selected a subdomain yet.\n        \n        Please select a subdomain using the command: gendocs subdomain:set\n        or\n        Add your own custom domain using the command: gendocs domains:add\n        ");
                     }
@@ -252,15 +259,15 @@ var _handlers = {
                         });
                         logger_1.default.info(text_1 + "\n");
                     }
-                    return [3 /*break*/, 5];
-                case 4:
-                    e_3 = _b.sent();
+                    return [3 /*break*/, 6];
+                case 5:
+                    e_3 = _a.sent();
                     if (e_3.response.status === 403) {
                         logger_1.default.info("\n          You've hit the publishes/minute limit. Please wait a minute before you try again.\n        ");
                         return [2 /*return*/];
                     }
                     throw e_3;
-                case 5: return [2 /*return*/];
+                case 6: return [2 /*return*/];
             }
         });
     }); },

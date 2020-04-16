@@ -40,35 +40,63 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var configHandler_1 = __importDefault(require("./configHandler"));
 var cli_1 = __importDefault(require("./cli"));
-function getToken() {
+function getToken(args) {
+    if (args === void 0) { args = []; }
     return __awaiter(this, void 0, void 0, function () {
-        var token;
+        var configToken, tokenFileToken;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, attemptGetTokenFromConfig()];
                 case 1:
-                    token = _a.sent();
-                    if (token != null)
-                        return [2 /*return*/, token];
+                    configToken = _a.sent();
+                    if (configToken != null)
+                        return [2 /*return*/, configToken];
+                    return [4 /*yield*/, attemptGetTokenFromTokenFile()];
+                case 2:
+                    tokenFileToken = _a.sent();
+                    if (tokenFileToken != null)
+                        return [2 /*return*/, tokenFileToken];
+                    if (args.length > 0) {
+                        return [2 /*return*/, args[0]];
+                    }
                     return [4 /*yield*/, cli_1.default.promptToken()];
-                case 2: return [2 /*return*/, _a.sent()];
+                case 3: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+function attemptGetTokenFromTokenFile() {
+    return __awaiter(this, void 0, void 0, function () {
+        var e_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, configHandler_1.default.readTokenFile()];
+                case 1: return [2 /*return*/, _a.sent()];
+                case 2:
+                    e_1 = _a.sent();
+                    return [2 /*return*/, null];
+                case 3: return [2 /*return*/];
             }
         });
     });
 }
 function attemptGetTokenFromConfig() {
     return __awaiter(this, void 0, void 0, function () {
-        var token, e_1;
+        var config, e_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, configHandler_1.default.readConfigFile()];
                 case 1:
-                    token = (_a.sent()).token;
-                    return [2 /*return*/, token];
+                    config = _a.sent();
+                    if (config == null)
+                        return [2 /*return*/, null];
+                    return [2 /*return*/, config.token];
                 case 2:
-                    e_1 = _a.sent();
+                    e_2 = _a.sent();
                     return [2 /*return*/, null];
                 case 3: return [2 /*return*/];
             }

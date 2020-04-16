@@ -38,85 +38,61 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs_1 = __importDefault(require("fs"));
 var path_1 = __importDefault(require("path"));
 var fileHandler_1 = __importDefault(require("./fileHandler"));
-function createConfigFile(name, token) {
-    if (token === void 0) { token = null; }
+var cli_1 = __importDefault(require("./cli"));
+var configHandler_1 = __importDefault(require("./configHandler"));
+/**
+ * Sets up the current directory to contain all necessary items to start writing docs.
+ * Creates:
+ *  - gendocs.json
+ *  - gendocs-token
+ *  - .gitignore (appends to it, if it already exists after prompting)
+ */
+function init(name, token) {
     return __awaiter(this, void 0, void 0, function () {
-        var contents;
-        return __generator(this, function (_a) {
-            contents = { name: name, pages: [] };
-            if (token != null) {
-                contents["token"] = token;
-            }
-            fileHandler_1.default.createAndWrite(configFilePath(), JSON.stringify(contents, null, "\t"));
-            return [2 /*return*/];
-        });
-    });
-}
-function readConfigFile() {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            if (!fs_1.default.existsSync(configFilePath())) {
-                return [2 /*return*/, null];
-            }
-            return [2 /*return*/, fileHandler_1.default.readJSONFileSync(configFilePath())];
-        });
-    });
-}
-function updateConfig(updates) {
-    return __awaiter(this, void 0, void 0, function () {
-        var config, key;
+        var shouldOverwrite, shouldOverwrite;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, readConfigFile()];
+                case 0:
+                    if (!fileHandler_1.default.fileExists(configHandler_1.default.configFilePath())) return [3 /*break*/, 2];
+                    return [4 /*yield*/, cli_1.default.promptOverwrite("gendocs.json")];
                 case 1:
-                    config = _a.sent();
-                    for (key in updates) {
-                        config[key] = updates[key];
+                    shouldOverwrite = _a.sent();
+                    if (!shouldOverwrite)
+                        return [2 /*return*/];
+                    _a.label = 2;
+                case 2:
+                    if (!fileHandler_1.default.fileExists(configHandler_1.default.tokenFilePath())) return [3 /*break*/, 4];
+                    return [4 /*yield*/, cli_1.default.promptOverwrite("gendocs-token")];
+                case 3:
+                    shouldOverwrite = _a.sent();
+                    if (!shouldOverwrite)
+                        return [2 /*return*/];
+                    _a.label = 4;
+                case 4: return [4 /*yield*/, configHandler_1.default.createConfigFile(name)];
+                case 5:
+                    _a.sent();
+                    return [4 /*yield*/, configHandler_1.default.createTokenFile(token)];
+                case 6:
+                    _a.sent();
+                    if (fileHandler_1.default.fileExists(gitIgnorePath())) {
+                        fileHandler_1.default.appendToFile(gitIgnorePath(), "# Gendocs token file\ngendocs-token\n");
                     }
-                    fs_1.default.writeFileSync(configFilePath(), JSON.stringify(config, null, "\t"));
+                    else {
+                        fileHandler_1.default.createAndWrite(gitIgnorePath(), "gendocs-token\n");
+                    }
                     return [2 /*return*/];
             }
         });
     });
 }
-function createTokenFile(token) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            fileHandler_1.default.createAndWrite(tokenFilePath(), token);
-            return [2 /*return*/];
-        });
-    });
-}
-function readTokenFile() {
-    return __awaiter(this, void 0, void 0, function () {
-        var contents;
-        return __generator(this, function (_a) {
-            if (!fs_1.default.existsSync(tokenFilePath())) {
-                return [2 /*return*/, null];
-            }
-            contents = fileHandler_1.default.readFileSync(tokenFilePath());
-            return [2 /*return*/, contents.trim()];
-        });
-    });
-}
-function configFilePath() {
-    return path_1.default.join(basePath(), "gendocs.json");
-}
-function tokenFilePath() {
-    return path_1.default.join(basePath(), "gendocs-token");
+function gitIgnorePath() {
+    return path_1.default.join(basePath(), ".gitignore");
 }
 function basePath() {
     return process.cwd();
 }
 exports.default = {
-    createConfigFile: createConfigFile,
-    readConfigFile: readConfigFile,
-    updateConfig: updateConfig,
-    readTokenFile: readTokenFile,
-    configFilePath: configFilePath,
-    tokenFilePath: tokenFilePath,
-    createTokenFile: createTokenFile
+    init: init
 };

@@ -66,6 +66,14 @@ function promptPassword() {
         });
     });
 }
+function promptOverwrite(fileName) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            logger_1.default.info("\n    This directory already contains a \"" + fileName + "\" file.\n  ");
+            return [2 /*return*/, promptConfirm("Overwrite this file?")];
+        });
+    });
+}
 function promptEmail() {
     return __awaiter(this, void 0, void 0, function () {
         var result;
@@ -100,14 +108,24 @@ function promptToken() {
     return promptSingle("Token:");
 }
 function promptConfirm(message) {
-    return inquirer_1.default
-        .prompt([
-        {
-            type: "confirm",
-            name: "result",
-            message: message
-        }
-    ]);
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, inquirer_1.default
+                        .prompt([
+                        {
+                            type: "confirm",
+                            name: "value",
+                            message: message
+                        }
+                    ])];
+                case 1:
+                    result = _a.sent();
+                    return [2 /*return*/, result.value];
+            }
+        });
+    });
 }
 function promptDomain() {
     return __awaiter(this, void 0, void 0, function () {
@@ -181,5 +199,6 @@ exports.default = {
     promptConfirm: promptConfirm,
     promptDomain: promptDomain,
     promptSubdomain: promptSubdomain,
-    promptInvitation: promptInvitation
+    promptInvitation: promptInvitation,
+    promptOverwrite: promptOverwrite
 };

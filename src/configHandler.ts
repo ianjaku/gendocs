@@ -2,40 +2,30 @@ import fs from "fs"
 import path from "path"
 import cli from "./cli"
 import logger from "./logger"
+import fileHandler from "./fileHandler"
 
 interface Config {
   name: string;
-  token: string;
+  token?: string;
   pages: string[];
-  sourcePath: string;
+  sourcePath?: string;
 }
 
-async function createConfigFile(token: string, name: string) {
-  if (fs.existsSync(configFilePath())) {
-    const prompt = await cli.promptConfirm("The file already exists, overwrite?")
-    if (prompt.result === false) return
+async function createConfigFile(name: string, token: string | null = null) {
+  const contents: Config = { name, pages: [] }
+  if (token != null) {
+    contents["token"] = token
   }
-  
-  const contents = {
-    name,
-    token,
-    pages: []
-  }
-  fs.writeFileSync(configFilePath(), JSON.stringify(contents, null, "\t"))
+
+  fileHandler.createAndWrite(configFilePath(), JSON.stringify(contents, null, "\t"))
 }
 
-async function readConfigFile(): Promise<Config> {
+async function readConfigFile(): Promise<Config | null> {
   if (!fs.existsSync(configFilePath())) {
-    throw Error(`
-      Config file could not be found.
-      Use "gendocs init" to generate the config file.
-    `)
+    return null
   }
 
-  const buffer = fs.readFileSync(configFilePath())
-  const resultJSON = buffer.toString('utf-8')
-  const result = JSON.parse(resultJSON)
-  return result
+  return fileHandler.readJSONFileSync(configFilePath())
 }
 
 async function updateConfig(updates: any): Promise<void> {
@@ -46,12 +36,37 @@ async function updateConfig(updates: any): Promise<void> {
   fs.writeFileSync(configFilePath(), JSON.stringify(config, null, "\t"))
 }
 
+async function createTokenFile(token: string) {
+  fileHandler.createAndWrite(tokenFilePath(), token)
+}
+
+async function readTokenFile(): Promise<string | null> {
+  if (!fs.existsSync(tokenFilePath())) {
+    return null
+  }
+
+  const contents = fileHandler.readFileSync(tokenFilePath())
+  return contents.trim()
+}
+
 function configFilePath() {
-  return path.join(process.cwd(), "gendocs.json")
+  return path.join(basePath(), "gendocs.json")
+}
+
+function tokenFilePath() {
+  return path.join(basePath(), "gendocs-token")
+}
+
+function basePath() {
+  return process.cwd()
 }
 
 export default {
   createConfigFile,
   readConfigFile,
-  updateConfig
+  updateConfig,
+  readTokenFile,
+  configFilePath,
+  tokenFilePath,
+  createTokenFile
 }

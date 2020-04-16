@@ -19,6 +19,13 @@ async function promptPassword(): Promise<string> {
   return result.password.trim()
 }
 
+async function promptOverwrite(fileName: string) {
+  logger.info(`
+    This directory already contains a "${fileName}" file.
+  `)
+  return promptConfirm("Overwrite this file?")
+}
+
 async function promptEmail(): Promise<string> {
   const result = await  inquirer
     .prompt([
@@ -45,15 +52,16 @@ function promptToken(): Promise<string> {
   return promptSingle("Token:")
 }
 
-function promptConfirm(message: string): Promise<{result: boolean}> {
-  return inquirer
+async function promptConfirm(message: string): Promise<boolean> {
+  const result = await inquirer
     .prompt([
       {
         type: "confirm",
-        name: "result",
+        name: "value",
         message
       }
     ])
+  return result.value
 }
 
 async function promptDomain(): Promise<string> {
@@ -118,5 +126,6 @@ export default {
   promptConfirm,
   promptDomain,
   promptSubdomain,
-  promptInvitation
+  promptInvitation,
+  promptOverwrite
 }

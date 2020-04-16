@@ -6,6 +6,7 @@ import documentHandler from "./documentHandler"
 import repository from "./repository"
 import path from "path"
 import authHandler from "./authHandler"
+import initHandler from "./initHandler"
 
 const _handlers: {[command: string]: (args: string[]) => void} = {
   help: (args: string[]) => {
@@ -110,16 +111,32 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     const token = await cli.promptToken()
 
     const response = await repository.singleDocument(token)
-    await configHandler.createConfigFile(token, response.doc.name)
+    await initHandler.init(response.doc.name, token)
   },
   publish: async (args: string[]) => {
-    let {token, pages, sourcePath, name} = await configHandler.readConfigFile()
-    if (token == null && pages != null && args.length > 0) {
-      token = args[0]
+    const config = await configHandler.readConfigFile()
+    if (config == null) {
+      logger.error(`
+        Config file could not be found.
+        Use "gendocs init" to generate the config file.
+      `)
+      return
     }
-    if (sourcePath != null) {
-      pages = pages.map(p => path.join(sourcePath, p))
+    const token = await authHandler.getToken(args)
+    if (token == null) {
+      throw Error(`
+        We couldn't find a token to authenticate you.
+        Please provide a token in one of these ways:
+          - in a gendocs-token file
+          - in a gendocs.json file
+          - as a argument to "gendocs publish [token]"
+      `)
     }
+    
+    let pages
+    const sourcePath = config.sourcePath || ""
+    pages = config.pages.map(p => path.join(sourcePath, p))
+
     const generatedPages = documentHandler.loadPages(pages)
     if (generatedPages.length === 0) {
       logger.info(`
