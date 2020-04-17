@@ -12,6 +12,9 @@ function readJSONFileSync(path) {
     var resultJSON = readFileSync(path);
     return JSON.parse(resultJSON);
 }
+function createReadStream(path) {
+    return fs_1.default.createReadStream(path);
+}
 function fileExists(path) {
     return fs_1.default.existsSync(path);
 }
@@ -21,10 +24,16 @@ function createAndWrite(path, contents) {
 function appendToFile(path, contents) {
     fs_1.default.appendFileSync(path, contents);
 }
+function fileSize(path) {
+    var stats = fs_1.default.statSync(path);
+    return stats["size"];
+}
 exports.default = {
     readFileSync: readFileSync,
     readJSONFileSync: readJSONFileSync,
     fileExists: fileExists,
     createAndWrite: createAndWrite,
-    appendToFile: appendToFile
+    appendToFile: appendToFile,
+    createReadStream: createReadStream,
+    fileSize: fileSize
 };

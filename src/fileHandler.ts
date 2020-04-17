@@ -10,6 +10,10 @@ function readJSONFileSync(path: string) {
   return JSON.parse(resultJSON)
 }
 
+function createReadStream(path: string) {
+  return fs.createReadStream(path)
+}
+
 function fileExists(path: string) {
   return fs.existsSync(path)
 }
@@ -22,10 +26,17 @@ function appendToFile(path: string, contents: string) {
   fs.appendFileSync(path, contents)
 }
 
+function fileSize(path: string) {
+  const stats = fs.statSync(path)
+  return stats["size"]
+}
+
 export default {
   readFileSync,
   readJSONFileSync,
   fileExists,
   createAndWrite,
-  appendToFile
+  appendToFile,
+  createReadStream,
+  fileSize
 }

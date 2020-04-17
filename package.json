@@ -1,6 +1,6 @@
 {
   "name": "@invacto/gendocs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "GenDocs CLI",
   "main": "bin/gendocs.js",
   "scripts": {
@@ -26,11 +26,14 @@
     "@types/inquirer": "^6.5.0",
     "@types/marked": "^0.7.3",
     "@types/node": "^13.11.0",
+    "@types/uuid": "^7.0.2",
     "@types/yargs": "^15.0.4",
     "axios": "^0.19.2",
+    "form-data": "^3.0.0",
     "gray-matter": "^4.0.2",
     "inquirer": "^7.1.0",
     "marked": "^0.8.2",
+    "uuid": "^7.0.3",
     "yargs": "^15.3.1"
   }
 }

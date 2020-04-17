@@ -39,6 +39,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
+function uploadFile(formData) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, axios_1.default.post(baseUrl() + "/v1/files", formData, {
+                        headers: {
+                            'Content-Type': "multipart/form-data; boundary=" + formData.getBoundary()
+                        }
+                    })];
+                case 1:
+                    response = _a.sent();
+                    return [2 /*return*/, response.data];
+            }
+        });
+    });
+}
 function createUser(invitation, email, password) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -188,8 +205,8 @@ function del(relativeUrl) {
     });
 }
 function baseUrl() {
-    // return "https://gendocs.io/api"
-    return "http://localhost:4000/api";
+    return "https://gendocs.io/api";
+    // return "http://localhost:4000/api"
     // return "https://gendocs.gendocs.invacto.com/api"
 }
 exports.default = {
@@ -204,5 +221,6 @@ exports.default = {
     updateDocument: updateDocument,
     doesEmailExist: doesEmailExist,
     domainStatus: domainStatus,
-    deleteDocument: deleteDocument
+    deleteDocument: deleteDocument,
+    uploadFile: uploadFile
 };

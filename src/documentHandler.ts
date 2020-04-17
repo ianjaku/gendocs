@@ -1,7 +1,7 @@
 import fs from "fs"
 import matter from "gray-matter"
-import crypto from "crypto"
 import markdownParser from "./markdownParser"
+import util from "./util"
 
 export interface Page {
   category: string;
@@ -16,13 +16,18 @@ export interface Page {
   order: number;
 }
 
-function loadPages(paths: string[]) {
-  const pages = paths.map((path, index) => loadPage(path, index))
+async function loadPages(paths: string[]) {
+  const pages: Page[] = []
+  let index = 0
+  for (const path of paths) {
+    const page = await loadPage(path, index++)
+    pages.push(page)
+  }
   ensureSlugsAreUnique(pages)
   return pages
 }
 
-function loadPage(filePath: string, index: number) {
+async function loadPage(filePath: string, index: number) {
   filePath = ensureFileEndsWithMD(filePath)
   validateFileExists(filePath)
 
@@ -31,8 +36,8 @@ function loadPage(filePath: string, index: number) {
   const markdown = matterResult.content
   const metaData = validateMetaData(matterResult.data)
   const slug = generateSlug(metaData.category, metaData.title)
-  const html = markdownParser.parseMarkdown(markdown)
-  const checksum = checksumForString(markdown)
+  const html = await markdownParser.parseMarkdown(markdown)
+  const checksum = util.checksumForString(markdown)
   const codeLanguages = markdownParser.findUsedCodeLanguagesInMarkdown(markdown)
   const menuItems = markdownParser.findMenuItems(markdown)
 
@@ -87,9 +92,6 @@ function validateFileExists(filePath: string) {
   }
 }
 
-function checksumForString(contentJson: string) {
-  return crypto.createHash("md5").update(contentJson).digest("hex")
-}
 
 function validateMetaData(metaData: any): {title: string, category: string} {
   if (metaData.title == null || metaData.category == null) {

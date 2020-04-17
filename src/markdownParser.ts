@@ -1,38 +1,33 @@
 import marked from "marked"
+import MarkdownExtension from "./markdownExtension/MarkdownExtension"
+import HeadingsExtension from "./markdownExtension/HeadingsExtension"
+import CodeExtension from "./markdownExtension/CodeExtension"
+import ImageExtension from "./markdownExtension/ImageExtension"
 
-const renderer = new marked.Renderer()
+const extensions: MarkdownExtension[] = [
+  new HeadingsExtension(),
+  new CodeExtension()
+  // new ImageExtension()
+]
 
-renderer.heading = (text: string, level: number) => {
-  return `
-    <h${level + 1} id="${makeStringUrlSafe(text)}">
-      ${text}
-    </h${level + 1}>
-  `
-}
-
-renderer.code = (code: string, language: string, isEscaped: boolean) => {
-  language = language.toLowerCase()
-
-  if (language === "info") {
-    return `
-      <div class="info">
-        <div class="info__icon"></div>
-        <div class="info__text">${code}</div>
-      </div>
-    `
+async function parseMarkdown(markdown: string) {
+  let tokens = marked.lexer(markdown)
+  let renderer = new marked.Renderer()
+  for (const extension of extensions) {
+    if (extension.modifyTokens != null) {
+      tokens = await Promise.resolve(extension.modifyTokens(tokens))
+    }
+    if (extension.modifyRenderer != null) {
+      renderer = await Promise.resolve(extension.modifyRenderer(renderer))
+    }
   }
-
-  return `
-    <div class="code">
-      <div class="code__language">${language}</div>
-      <pre class="code__value language-${language}"><code class="language-${language}">${code}</code></pre>
-    </div>
-  `
-}
-
-
-function parseMarkdown(markdown: string) {
-  return marked(markdown, { renderer })
+  let html = marked.parser(tokens, { renderer })
+  for (const extension of extensions) {
+    if (extension.modifyHTML != null) {
+      html = await Promise.resolve(extension.modifyHTML(html))
+    }
+  }
+  return html
 }
 
 function findUsedCodeLanguagesInMarkdown(markdown: string) {

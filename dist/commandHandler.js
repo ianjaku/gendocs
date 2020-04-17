@@ -234,16 +234,18 @@ var _handlers = {
                     }
                     sourcePath = config.sourcePath || "";
                     pages = config.pages.map(function (p) { return path_1.default.join(sourcePath, p); });
-                    generatedPages = documentHandler_1.default.loadPages(pages);
+                    return [4 /*yield*/, documentHandler_1.default.loadPages(pages)];
+                case 3:
+                    generatedPages = _a.sent();
                     if (generatedPages.length === 0) {
-                        logger_1.default.info("\n        No pages were found.\n        Please add your pages to gendocs.json.\n\n        Example:\n\n          {\n            name: \"" + name + "\",\n            token: \"***********\",\n            pages: [\n              \"./my_page\",\n            ]\n          }\n      ");
+                        logger_1.default.info("\n        No pages were found.\n        Please add your pages to gendocs.json.\n\n        Example:\n\n          {\n            name: \"" + config.name + "\",\n            token: \"***********\",\n            pages: [\n              \"./my_page\",\n            ]\n          }\n      ");
                         return [2 /*return*/];
                     }
-                    _a.label = 3;
-                case 3:
-                    _a.trys.push([3, 5, , 6]);
-                    return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
+                    _a.label = 4;
                 case 4:
+                    _a.trys.push([4, 6, , 7]);
+                    return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
+                case 5:
                     result = _a.sent();
                     if (result.doc.subdomain == null && result.domains.length == 0) {
                         logger_1.default.info("\n        Succesfully updated your documentation!\n        You don't seem to have selected a subdomain yet.\n        \n        Please select a subdomain using the command: gendocs subdomain:set\n        or\n        Add your own custom domain using the command: gendocs domains:add\n        ");
@@ -259,15 +261,15 @@ var _handlers = {
                         });
                         logger_1.default.info(text_1 + "\n");
                     }
-                    return [3 /*break*/, 6];
-                case 5:
+                    return [3 /*break*/, 7];
+                case 6:
                     e_3 = _a.sent();
                     if (e_3.response.status === 403) {
                         logger_1.default.info("\n          You've hit the publishes/minute limit. Please wait a minute before you try again.\n        ");
                         return [2 /*return*/];
                     }
                     throw e_3;
-                case 6: return [2 /*return*/];
+                case 7: return [2 /*return*/];
             }
         });
     }); },

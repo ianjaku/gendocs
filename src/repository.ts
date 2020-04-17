@@ -1,5 +1,15 @@
 import axios from "axios"
 import { Page } from "./documentHandler"
+import FormData from "form-data"
+
+async function uploadFile(formData: FormData) {
+  const response = await axios.post(baseUrl() + "/v1/files", formData, {
+    headers: {
+      'Content-Type': `multipart/form-data; boundary=${formData.getBoundary()}`
+    }
+  })
+  return response.data
+}
 
 async function createUser(invitation: string, email: string, password: string) {
   return post("/v1/users", {
@@ -82,8 +92,8 @@ async function del(relativeUrl: string) {
 }
 
 function baseUrl() {
-  // return "https://gendocs.io/api"
-  return "http://localhost:4000/api"
+  return "https://gendocs.io/api"
+  // return "http://localhost:4000/api"
   // return "https://gendocs.gendocs.invacto.com/api"
 }
 
@@ -99,5 +109,6 @@ export default {
   updateDocument,
   doesEmailExist,
   domainStatus,
-  deleteDocument
+  deleteDocument,
+  uploadFile
 }

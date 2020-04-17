@@ -40,27 +40,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var configHandler_1 = __importDefault(require("./configHandler"));
 var cli_1 = __importDefault(require("./cli"));
+var _tokenCache = null;
 function getToken(args) {
     if (args === void 0) { args = []; }
     return __awaiter(this, void 0, void 0, function () {
-        var configToken, tokenFileToken;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, attemptGetTokenFromConfig()];
+        var configToken, tokenFileToken, _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    if (_tokenCache != null)
+                        return [2 /*return*/, _tokenCache];
+                    return [4 /*yield*/, attemptGetTokenFromConfig()];
                 case 1:
-                    configToken = _a.sent();
+                    configToken = _b.sent();
                     if (configToken != null)
-                        return [2 /*return*/, configToken];
+                        return [2 /*return*/, cacheToken(configToken)];
                     return [4 /*yield*/, attemptGetTokenFromTokenFile()];
                 case 2:
-                    tokenFileToken = _a.sent();
+                    tokenFileToken = _b.sent();
                     if (tokenFileToken != null)
-                        return [2 /*return*/, tokenFileToken];
+                        return [2 /*return*/, cacheToken(tokenFileToken)];
                     if (args.length > 0) {
-                        return [2 /*return*/, args[0]];
+                        return [2 /*return*/, cacheToken(args[0])];
                     }
+                    _a = cacheToken;
                     return [4 /*yield*/, cli_1.default.promptToken()];
-                case 3: return [2 /*return*/, _a.sent()];
+                case 3: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];
             }
         });
     });
@@ -102,6 +107,10 @@ function attemptGetTokenFromConfig() {
             }
         });
     });
+}
+function cacheToken(token) {
+    _tokenCache = token;
+    return token;
 }
 exports.default = {
     getToken: getToken

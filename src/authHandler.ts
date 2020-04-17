@@ -1,19 +1,22 @@
 import configHandler from "./configHandler";
 import cli from "./cli";
 
+let _tokenCache: string | null = null
 
 async function getToken(args: string[] = []) {
+  if (_tokenCache != null) return _tokenCache
+  
   const configToken = await attemptGetTokenFromConfig()
-  if (configToken != null) return configToken
+  if (configToken != null) return cacheToken(configToken)
   
   const tokenFileToken = await attemptGetTokenFromTokenFile()
-  if (tokenFileToken != null) return tokenFileToken
+  if (tokenFileToken != null) return cacheToken(tokenFileToken)
 
   if (args.length > 0) {
-    return args[0]
+    return cacheToken(args[0])
   }
 
-  return await cli.promptToken()
+  return cacheToken(await cli.promptToken())
 }
 
 async function attemptGetTokenFromTokenFile() {
@@ -32,6 +35,11 @@ async function attemptGetTokenFromConfig() {
   } catch (e) {
     return null
   }
+}
+
+function cacheToken(token: string) {
+  _tokenCache = token
+  return token
 }
 
 export default {

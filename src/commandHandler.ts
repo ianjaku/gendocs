@@ -137,7 +137,7 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     const sourcePath = config.sourcePath || ""
     pages = config.pages.map(p => path.join(sourcePath, p))
 
-    const generatedPages = documentHandler.loadPages(pages)
+    const generatedPages = await documentHandler.loadPages(pages)
     if (generatedPages.length === 0) {
       logger.info(`
         No pages were found.
@@ -146,7 +146,7 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
         Example:
 
           {
-            name: "${name}",
+            name: "${config.name}",
             token: "***********",
             pages: [
               "./my_page",
