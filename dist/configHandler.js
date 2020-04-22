@@ -41,12 +41,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs_1 = __importDefault(require("fs"));
 var path_1 = __importDefault(require("path"));
 var fileHandler_1 = __importDefault(require("./fileHandler"));
-function createConfigFile(name, token) {
+function createConfigFile(name, token, keywords, description) {
     if (token === void 0) { token = null; }
+    if (keywords === void 0) { keywords = ""; }
+    if (description === void 0) { description = ""; }
     return __awaiter(this, void 0, void 0, function () {
         var contents;
         return __generator(this, function (_a) {
-            contents = { name: name, pages: [] };
+            contents = { name: name, pages: [], keywords: keywords, description: description };
             if (token != null) {
                 contents["token"] = token;
             }

@@ -113,10 +113,10 @@ function singleDocument(token) {
         });
     });
 }
-function publish(token, pages) {
+function publish(token, pages, config) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, post("/v1/pages", { token: token, pages: pages })];
+            return [2 /*return*/, post("/v1/pages", { token: token, pages: pages, config: config })];
         });
     });
 }
@@ -205,8 +205,8 @@ function del(relativeUrl) {
     });
 }
 function baseUrl() {
-    return "https://gendocs.io/api";
-    // return "http://localhost:4000/api"
+    // return "https://gendocs.io/api"
+    return "http://localhost:4000/api";
     // return "https://gendocs.gendocs.invacto.com/api"
 }
 exports.default = {

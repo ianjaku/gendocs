@@ -157,7 +157,10 @@ const _handlers: {[command: string]: (args: string[]) => void} = {
     }
 
     try {
-      const result = await repository.publish(token, generatedPages)
+      if (config["token"] != null) {
+        delete config["token"]
+      }
+      const result = await repository.publish(token, generatedPages, config)
       if (result.doc.subdomain == null && result.domains.length == 0) {
         logger.info(`
         Succesfully updated your documentation!

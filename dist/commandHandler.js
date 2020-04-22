@@ -244,7 +244,10 @@ var _handlers = {
                     _a.label = 4;
                 case 4:
                     _a.trys.push([4, 6, , 7]);
-                    return [4 /*yield*/, repository_1.default.publish(token, generatedPages)];
+                    if (config["token"] != null) {
+                        delete config["token"];
+                    }
+                    return [4 /*yield*/, repository_1.default.publish(token, generatedPages, config)];
                 case 5:
                     result = _a.sent();
                     if (result.doc.subdomain == null && result.domains.length == 0) {

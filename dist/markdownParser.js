@@ -41,10 +41,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var marked_1 = __importDefault(require("marked"));
 var HeadingsExtension_1 = __importDefault(require("./markdownExtension/HeadingsExtension"));
 var CodeExtension_1 = __importDefault(require("./markdownExtension/CodeExtension"));
+var ImageExtension_1 = __importDefault(require("./markdownExtension/ImageExtension"));
+var LinkExtension_1 = __importDefault(require("./markdownExtension/LinkExtension"));
 var extensions = [
     new HeadingsExtension_1.default(),
-    new CodeExtension_1.default()
-    // new ImageExtension()
+    new CodeExtension_1.default(),
+    new ImageExtension_1.default(),
+    new LinkExtension_1.default()
 ];
 function parseMarkdown(markdown) {
     return __awaiter(this, void 0, void 0, function () {

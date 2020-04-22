@@ -4,15 +4,22 @@ import cli from "./cli"
 import logger from "./logger"
 import fileHandler from "./fileHandler"
 
-interface Config {
+export interface Config {
   name: string;
   token?: string;
   pages: string[];
   sourcePath?: string;
+  description?: string;
+  keywords?: string;
 }
 
-async function createConfigFile(name: string, token: string | null = null) {
-  const contents: Config = { name, pages: [] }
+async function createConfigFile(
+  name: string,
+  token: string | null = null,
+  keywords: string = "",
+  description: string = ""
+) {
+  const contents: Config = { name, pages: [], keywords, description }
   if (token != null) {
     contents["token"] = token
   }

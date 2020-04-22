@@ -2,6 +2,8 @@ import fs from "fs"
 import matter from "gray-matter"
 import markdownParser from "./markdownParser"
 import util from "./util"
+import path from "path"
+import linkManager from "./linkManager"
 
 export interface Page {
   category: string;
@@ -17,13 +19,14 @@ export interface Page {
 }
 
 async function loadPages(paths: string[]) {
-  const pages: Page[] = []
+  let pages: Page[] = []
   let index = 0
   for (const path of paths) {
     const page = await loadPage(path, index++)
     pages.push(page)
   }
   ensureSlugsAreUnique(pages)
+  pages = pages.map(p => linkManager.solveLocalLinks(p))
   return pages
 }
 
@@ -40,6 +43,9 @@ async function loadPage(filePath: string, index: number) {
   const checksum = util.checksumForString(markdown)
   const codeLanguages = markdownParser.findUsedCodeLanguagesInMarkdown(markdown)
   const menuItems = markdownParser.findMenuItems(markdown)
+
+  const absolutePath = path.resolve(filePath)
+  linkManager.registerSlug(absolutePath, slug)
 
   return {
     category: metaData.category,

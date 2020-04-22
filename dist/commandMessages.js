@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var _messages = {
     help: function () {
-        return "\n      Available commands:\n        - help \n        - register\n        - docs:create\n        - docs:list\n        - docs:remove\n        - init\n        - publish\n        - subdomain:set\n    ";
+        return "\n      Use gendocs help [command] to get more information about a command.\n    \n      Available commands:\n        - help \n        - register\n        - docs:create\n        - docs:list\n        - docs:remove\n        - init\n        - publish\n        - subdomain:set\n    ";
     },
     register: function () {
         return "\n      Registers a new user, prompts for the required data.\n    ";

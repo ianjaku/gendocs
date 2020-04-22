@@ -1,6 +1,6 @@
 {
   "name": "@invacto/gendocs",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "GenDocs CLI",
   "main": "bin/gendocs.js",
   "scripts": {

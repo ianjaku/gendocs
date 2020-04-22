@@ -3,11 +3,13 @@ import MarkdownExtension from "./markdownExtension/MarkdownExtension"
 import HeadingsExtension from "./markdownExtension/HeadingsExtension"
 import CodeExtension from "./markdownExtension/CodeExtension"
 import ImageExtension from "./markdownExtension/ImageExtension"
+import LinkExtension from "./markdownExtension/LinkExtension"
 
 const extensions: MarkdownExtension[] = [
   new HeadingsExtension(),
-  new CodeExtension()
-  // new ImageExtension()
+  new CodeExtension(),
+  new ImageExtension(),
+  new LinkExtension()
 ]
 
 async function parseMarkdown(markdown: string) {

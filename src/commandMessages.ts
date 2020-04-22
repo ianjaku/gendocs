@@ -2,6 +2,8 @@
 const _messages: {[command: string]: () => string} = {
   help() {
     return `
+      Use gendocs help [command] to get more information about a command.
+    
       Available commands:
         - help 
         - register

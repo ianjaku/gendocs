@@ -1,11 +1,10 @@
 import MarkdownExtension from "./MarkdownExtension"
-import { TokensList, Renderer } from "marked"
+import { Renderer } from "marked"
 import fileHandler from "../fileHandler"
 import authHandler from "../authHandler"
 import path from "path"
 import FormData from "form-data"
 import repository from "../repository"
-import { v4 } from "uuid"
 import util from "../util"
 
 interface Image {
@@ -46,13 +45,21 @@ class ImageExtension implements MarkdownExtension {
 
     try {
       const fileSize = fileHandler.fileSize(filePath)
+
+      if (fileSize > 10 * 1000 * 1000) {
+        throw Error(`
+          The current maximum file size is 5MB.
+          The file: ${filePath} is bigger than that.
+        `)
+      }
+        
       const hash = util.checksumForString(filePath + "|" + fileSize)
-      
+
       form.append('token', await authHandler.getToken())
       form.append('file', fileHandler.createReadStream(filePath), path.basename(filePath))
       form.append('hash', hash)
       const result = await repository.uploadFile(form)
-      return result.path
+      return result.file.url
     } catch (e) {
       throw Error("Failed" + e.message)
     }

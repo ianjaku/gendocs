@@ -96,6 +96,9 @@ var ImageExtension = /** @class */ (function () {
                     case 1:
                         _d.trys.push([1, 4, , 5]);
                         fileSize = fileHandler_1.default.fileSize(filePath);
+                        if (fileSize > 10 * 1000 * 1000) {
+                            throw Error("\n          The current maximum file size is 5MB.\n          The file: " + filePath + " is bigger than that.\n        ");
+                        }
                         hash = util_1.default.checksumForString(filePath + "|" + fileSize);
                         _b = (_a = form).append;
                         _c = ['token'];
@@ -107,7 +110,7 @@ var ImageExtension = /** @class */ (function () {
                         return [4 /*yield*/, repository_1.default.uploadFile(form)];
                     case 3:
                         result = _d.sent();
-                        return [2 /*return*/, result.path];
+                        return [2 /*return*/, result.file.url];
                     case 4:
                         e_1 = _d.sent();
                         throw Error("Failed" + e_1.message);

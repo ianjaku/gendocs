@@ -1,6 +1,7 @@
 import axios from "axios"
 import { Page } from "./documentHandler"
 import FormData from "form-data"
+import { Config } from "./configHandler"
 
 async function uploadFile(formData: FormData) {
   const response = await axios.post(baseUrl() + "/v1/files", formData, {
@@ -47,8 +48,8 @@ async function singleDocument(token: string) {
   return get("/v1/docs/" + token)
 }
 
-async function publish(token: string, pages: Page[]) {
-  return post("/v1/pages", { token, pages })
+async function publish(token: string, pages: Page[], config: Config) {
+  return post("/v1/pages", { token, pages, config })
 }
 
 async function addDomain(token: string, domainName: string) {
@@ -92,8 +93,8 @@ async function del(relativeUrl: string) {
 }
 
 function baseUrl() {
-  return "https://gendocs.io/api"
-  // return "http://localhost:4000/api"
+  // return "https://gendocs.io/api"
+  return "http://localhost:4000/api"
   // return "https://gendocs.gendocs.invacto.com/api"
 }
 

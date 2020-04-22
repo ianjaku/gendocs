@@ -42,9 +42,11 @@ var fs_1 = __importDefault(require("fs"));
 var gray_matter_1 = __importDefault(require("gray-matter"));
 var markdownParser_1 = __importDefault(require("./markdownParser"));
 var util_1 = __importDefault(require("./util"));
+var path_1 = __importDefault(require("path"));
+var linkManager_1 = __importDefault(require("./linkManager"));
 function loadPages(paths) {
     return __awaiter(this, void 0, void 0, function () {
-        var pages, index, _i, paths_1, path, page;
+        var pages, index, _i, paths_1, path_2, page;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -54,8 +56,8 @@ function loadPages(paths) {
                     _a.label = 1;
                 case 1:
                     if (!(_i < paths_1.length)) return [3 /*break*/, 4];
-                    path = paths_1[_i];
-                    return [4 /*yield*/, loadPage(path, index++)];
+                    path_2 = paths_1[_i];
+                    return [4 /*yield*/, loadPage(path_2, index++)];
                 case 2:
                     page = _a.sent();
                     pages.push(page);
@@ -65,6 +67,7 @@ function loadPages(paths) {
                     return [3 /*break*/, 1];
                 case 4:
                     ensureSlugsAreUnique(pages);
+                    pages = pages.map(function (p) { return linkManager_1.default.solveLocalLinks(p); });
                     return [2 /*return*/, pages];
             }
         });
@@ -72,7 +75,7 @@ function loadPages(paths) {
 }
 function loadPage(filePath, index) {
     return __awaiter(this, void 0, void 0, function () {
-        var fileContent, matterResult, markdown, metaData, slug, html, checksum, codeLanguages, menuItems;
+        var fileContent, matterResult, markdown, metaData, slug, html, checksum, codeLanguages, menuItems, absolutePath;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -89,6 +92,8 @@ function loadPage(filePath, index) {
                     checksum = util_1.default.checksumForString(markdown);
                     codeLanguages = markdownParser_1.default.findUsedCodeLanguagesInMarkdown(markdown);
                     menuItems = markdownParser_1.default.findMenuItems(markdown);
+                    absolutePath = path_1.default.resolve(filePath);
+                    linkManager_1.default.registerSlug(absolutePath, slug);
                     return [2 /*return*/, {
                             category: metaData.category,
                             title: metaData.title,
