@@ -32,7 +32,7 @@
     "form-data": "^3.0.0",
     "gray-matter": "^4.0.2",
     "inquirer": "^7.1.0",
-    "marked": "^0.8.2",
+    "marked": "^4.0.10",
     "uuid": "^7.0.3",
     "yargs": "^15.3.1"
   }
